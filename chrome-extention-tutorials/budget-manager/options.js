@@ -23,6 +23,7 @@ $(function () {
                 message: 'Your total has been reset to 0'
             };
             chrome.notifications.create('limitNotif', notifOptions);
+            chrome.notifications.clear('limitNotif'); // clear it to have again next time
          });
     });
 

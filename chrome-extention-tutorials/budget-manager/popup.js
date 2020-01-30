@@ -23,6 +23,7 @@ $(function () {
                         message: 'Uh oh! Looks like you\'ve reached your limit'
                     };
                     chrome.notifications.create('limitNotif', notifOptions);
+                    chrome.notifications.clear('limitNotif'); 
                 }
             });
             $('#js-total-number').text(budgetTotal);
