@@ -5,13 +5,20 @@
     <title>
         PageFontStyle
     </title>
+    <script src="./jquery-3.4.1.min.js"></script>
+    <script src="./jscolor.js"></script>
+    <script src="./popup.js"></script>
+    <style>
+        body {
+            min-width: 250px;
+            min-height: 150px;
+        }
+    </style>
 </head>
 
 <body>
     <form>
-        <h1>Page fort</h1>
-        <label for="fontColor">Color:</label>
-        <input type="text" id="fontColor">
+        <input type="text" id="fontColor" class="jscolor" value="ab2567">
         <input type="submit" id="btnChange" value="Change">
     </form>
 </body>
