@@ -1,0 +1,26 @@
+{
+    "manifest_version": 2,
+    "name": "WikiIt",
+    "version": "1.0",
+    "description": "This extension searches in WiKi.",
+    "icons": {
+        "128": "icon128.png",
+        "48": "icon48.png",
+        "16": "icon16.png"
+    },
+    "page_action": {
+        "default_icon": "icon16.png",
+        "default_popup": "popup.html",
+        "default_title": "PageFontStyle"
+    },
+    "background": {
+        "scripts": [
+            "eventPage.js"
+        ],
+        "persistent": false
+    },
+    "permissions": [
+        "tabs",
+        "contextMenus"
+    ]
+}
