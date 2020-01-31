@@ -1,8 +1,8 @@
 {
     "manifest_version": 2,
-    "name": "Budget Manager",
+    "name": "PageFontStyle",
     "version": "1.0",
-    "description": "This extension manages your overall spendings.",
+    "description": "This extension controls page fonts.",
     "icons": {
         "128": "icon128.png",
         "48": "icon48.png",
@@ -22,7 +22,8 @@
     "content_scripts": [
         {
             "matches": ["https://developer.chrome.com/*"],
-            "js": ["jquery-3.4.1.min.js", "content.js"]
+            "js": ["jquery-3.4.1.min.js", "content.js"],
+            "css": ["content.css"]
         }
     ],
     "permissions": [
