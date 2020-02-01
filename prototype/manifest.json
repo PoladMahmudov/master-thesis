@@ -1,0 +1,28 @@
+{
+    "manifest_version": 2,
+    "name": "Resource Assurer",
+    "version": "1.0",
+    "description": "Resource Reliability and Integrity Assurance with Blockchain Technology in Web Browsers",
+    "icons": {
+        "512": "assets/icons/icon512.png",
+        "128": "assets/icons/icon128.png",
+        "48": "assets/icons/icon48.png",
+        "32": "assets/icons/icon32.png",
+        "16": "assets/icons/icon16.png"
+    },
+    "browser_action": {
+        "default_icon": "assets/icons/icon32.png",
+        "default_popup": "interface/popup.html",
+        "default_title": "Resource Assurer"
+    },
+    "background": {
+        "scripts": [
+            "./background/eventPage.js"
+        ],
+        "persistent": false
+    },
+    "permissions": [
+        "tabs",
+        "contextMenus"
+    ]
+}
