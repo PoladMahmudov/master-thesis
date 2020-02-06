@@ -19,7 +19,7 @@
     },
     "include": [
         "src/background",
-        "src/contentscript", 
+        "src/contentscript",
         "src/blockchain"
     ],
     "exclude": []
