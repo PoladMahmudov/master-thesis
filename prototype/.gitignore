@@ -1,0 +1,8 @@
+# Prototype
+# Dependency directories
+node_modules/
+
+# Generated files
+package-lock.json
+dist/
+

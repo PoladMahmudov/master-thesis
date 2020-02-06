@@ -18,12 +18,12 @@
             "32": "assets/icons/icon32.png",
             "16": "assets/icons/icon16.png"
         },
-        "default_popup": "interface/popup.html",
+        "default_popup": "popup.html",
         "default_title": "Resource Assurer"
     },
     "background": {
         "scripts": [
-            "background/eventPage.js"
+            "background.js"
         ],
         "persistent": true
     },

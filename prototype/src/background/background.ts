@@ -11,18 +11,18 @@ function listener(details) {
 
     // get data whilst it is downloaded
     // decode and store
-    streamFilter.ondata = event => {
+    streamFilter['ondata'] = event => {
         data.push(decoder.decode(event.data, {stream: true}));
-        streamFilter.write(event.data);
+        streamFilter['write'](event.data);
     }
 
     // aggregate the data to string
-    streamFilter.onstop = event => {
+    streamFilter['onstop'] = event => {
         data.push(decoder.decode());
         let str = data.join("");
         // process data
         console.log(`[Processed req=${details.requestId}]`);
-        streamFilter.close();
+        streamFilter['close']();
     }
 }
 
