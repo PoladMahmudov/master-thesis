@@ -19,7 +19,7 @@ module.exports = {
     entry: {
         contentscript: join(__dirname, 'src/contentscript/contentscript.ts'),
         background: join(__dirname, 'src/background/background.ts'),
-        popup: join(__dirname, 'src/interface/popup.ts'),
+        popup: join(__dirname, 'src/popup/popup.ts'),
     },
     output: {
         path: join(__dirname, 'dist'),
@@ -48,7 +48,7 @@ module.exports = {
         new CopyPlugin([
             { from: 'src/assets', to: 'assets/[path][name].[ext]' },
             { from: 'manifest.json', to: 'manifest.json' },
-            { from: 'src/interface/popup.html', to: 'popup.html' },
+            { from: 'src/popup/popup.html', to: 'popup.html' },
         ]),
         new RemovePlugin({
             before: {
