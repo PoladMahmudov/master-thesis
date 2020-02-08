@@ -7,6 +7,10 @@ import { Transaction } from '../transaction';
 
 export class IntegrityContract extends ContractBase {
 
+    constructor() {
+        super();
+    }
+
     /**
      * Find resource by hash
      * @param resourceHash is a sha256 string parameter

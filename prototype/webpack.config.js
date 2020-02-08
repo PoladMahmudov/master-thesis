@@ -19,7 +19,7 @@ module.exports = {
     entry: {
         contentscript: join(__dirname, 'src/contentscript/contentscript.ts'),
         background: join(__dirname, 'src/background/background.ts'),
-        popup: join(__dirname, 'src/popup/popup.ts'),
+        popup: join(__dirname, 'src/popup/popup.ts')
     },
     output: {
         path: join(__dirname, 'dist'),
@@ -34,7 +34,16 @@ module.exports = {
             },
             {
                 test: /\.scss$/,
-                use: [MiniCssExtractPlugin.loader, 'css-loader', 'sass-loader'],
+                use: [MiniCssExtractPlugin.loader,
+                    {
+                      loader: 'css-loader'
+                    },
+                    {
+                      loader: 'sass-loader',
+                      options: {
+                        sourceMap: true
+                      }
+                    }],
             }
         ],
     },

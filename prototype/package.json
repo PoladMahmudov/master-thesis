@@ -1,5 +1,5 @@
 {
-  "name": "resource-assuarer",
+  "name": "resource-assurer",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -8,6 +8,7 @@
   },
   "scripts": {
     "build": "webpack --mode production --config webpack.config.js",
+    "build:dev": "webpack --mode development --config webpack.config.js",
     "watch": "webpack --mode development --config webpack.config.js -w"
   },
   "keywords": [],
@@ -17,6 +18,7 @@
     "@types/firefox-webext-browser": "^70.0.1",
     "@types/node": "^13.7.0",
     "awesome-typescript-loader": "^5.2.1",
+    "bulma": "^0.8.0",
     "copy-webpack-plugin": "^5.1.1",
     "css-loader": "^3.4.2",
     "eosjs": "^20.0.3",
@@ -25,6 +27,7 @@
     "npm-run-all": "^4.1.5",
     "remove-files-webpack-plugin": "^1.2.2",
     "sass-loader": "^8.0.2",
+    "style-loader": "^0.21.0",
     "ts-node": "^8.6.2",
     "tslint": "^6.0.0",
     "typescript": "^3.7.5",

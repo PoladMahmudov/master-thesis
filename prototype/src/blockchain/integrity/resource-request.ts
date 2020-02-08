@@ -5,7 +5,7 @@ export class ResourceRequest {
     table = 'resources';
     upper_bound: string;
     lower_bound: string;
-    key_type= 'sha256';
+    key_type = 'sha256';
     index_position = 2;
 
     constructor(resourceHash: string) {

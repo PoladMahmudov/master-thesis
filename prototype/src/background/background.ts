@@ -1,27 +1,58 @@
+import { BackgroundHelper } from './background-helper';
+import { MessageType } from '../message/message.type';
+import { ResourceStateType as ResourceStateType } from '../message/resource-state.type';
+import { ResourceStatusType } from '../message/resource-status.type';
+
+const helper = new BackgroundHelper();
+
 // https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/webRequest/StreamFilter/ondata
 function listener(details) {
-    let streamFilter = browser.webRequest.filterResponseData(details.requestId);
-    let decoder = new TextDecoder("utf-8");
+    const streamFilter = browser.webRequest.filterResponseData(details.requestId);
 
-    // could be used for blocking the reguest 
+    // keep resource url
+    const resourceUrl: string = details.url;
+    // used for messaging
+    const tabId: number = details.tabId;
+
+    // could be used for blocking the request 
     // let dataProcessed = false;
 
-    // whole requested data
-    let data = [];
+    // aggregated requested data
+    const data: ArrayBuffer[] = [];
 
     // get data whilst it is downloaded
-    // decode and store
     streamFilter['ondata'] = event => {
-        data.push(decoder.decode(event.data, {stream: true}));
+        data.push(event.data);
         streamFilter['write'](event.data);
     }
 
-    // aggregate the data to string
-    streamFilter['onstop'] = event => {
-        data.push(decoder.decode());
-        let str = data.join("");
+    streamFilter['onstop'] = async event => {
+        // encode
+        const hashHex: string = await helper.encodeSha256(data);
         // process data
-        console.log(`[Processed req=${details.requestId}]`);
+        console.log(`[Processed req=${details.requestId}]`, resourceUrl);
+        // find in blockchain
+        const foundInBlockchain: boolean = await helper.checkIntegrity(hashHex);
+        // resource status
+        let state: ResourceStateType = ResourceStateType.UNPUBLISHED;
+        let status: ResourceStatusType = ResourceStatusType.WARNING;
+
+        if (foundInBlockchain) {
+            // TODO: check for reliability
+            state = ResourceStateType.PUBLISHED;
+        }
+
+        browser.tabs.sendMessage(
+            tabId,
+            {
+                type: MessageType.RESOURCES,
+                resourceHash: hashHex,
+                resourceUrl: resourceUrl,
+                state: state,
+                status: status
+            }
+        );
+        
         streamFilter['close']();
     }
 }
@@ -33,12 +64,12 @@ browser.webRequest.onBeforeRequest.addListener(
     ['blocking']
 );
 
-function onComplete(requestDetails) {
-    console.log("[COMPLETE]", requestDetails);
-}
+// function onComplete(requestDetails) {
+//     console.log("[COMPLETE]", requestDetails);
+// }
 
-// log successfully completed requests
-browser.webRequest.onCompleted.addListener(
-    onComplete,
-    { urls: ['<all_urls>'], types: ['script'] }
-);
+// // log successfully completed requests
+// browser.webRequest.onCompleted.addListener(
+//     onComplete,
+//     { urls: ['<all_urls>'], types: ['script'] }
+// );
