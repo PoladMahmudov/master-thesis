@@ -33,7 +33,7 @@ export class BrowserStorageHelper {
      * @param resource to be stored
      */
     public store(resource: Resource): void {
-        this.getStoredResource(resource.tabId)
+        this.getStoredResources(resource.tabId)
             .then((resources) => {
                 // set new resource value to resources
                 resources[resource.resourceHash] = resource;
@@ -58,8 +58,20 @@ export class BrowserStorageHelper {
      * @returns promise of resource array
      */
     public getByTab(tabId: number): Promise<Resource[]> {
-        return this.getStoredResource(tabId)
+        return this.getStoredResources(tabId)
             .then(resourceMap => Object.values(resourceMap));
+    }
+
+    /**
+     * Returns resource by hash-code
+     * 
+     * @param tabId identification number of the tab
+     * @param hash code of the resource uniquely identifying the resource
+     * @returns resource, or null, if not found 
+     */
+    public getByHash(tabId: number, hash: string): Promise<Resource> {
+        return this.getByTab(tabId)
+            .then(resources => resources.find(res => res.resourceHash === hash));
     }
 
     /**
@@ -72,7 +84,7 @@ export class BrowserStorageHelper {
         return browser.storage.local.remove(BrowserStorageHelper.resourceAlias(tabId));
     }
 
-    private getStoredResource(tabId: number): Promise<any> {
+    private getStoredResources(tabId: number): Promise<any> {
         return browser.storage.local
             .get(BrowserStorageHelper.resourceAlias(tabId))
             .then(storage => storage[BrowserStorageHelper.resourceAlias(tabId)])

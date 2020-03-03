@@ -6,6 +6,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { PopupComponent } from './popup.component';
 import { ResourcesComponent } from './resources/resources.component';
 import { ResourcePublisherComponent } from './resource-publisher/resource-publisher.component';
+import { BrowserStorageHelper } from 'src/lib/storage/browser-storage-helper';
 
 @NgModule({
   declarations: [
@@ -18,7 +19,7 @@ import { ResourcePublisherComponent } from './resource-publisher/resource-publis
     PopupRoutingModule,
     FontAwesomeModule
   ],
-  providers: [],
+  providers: [BrowserStorageHelper],
   bootstrap: [PopupComponent]
 })
 export class PopupModule { }

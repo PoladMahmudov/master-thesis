@@ -7,7 +7,7 @@ import { ResourcePublisherComponent } from './resource-publisher/resource-publis
 const routes: Routes = [
   { path: '', redirectTo: '/resources', pathMatch: 'full'},
   { path: 'resources', component: ResourcesComponent},
-  { path: 'resource-publisher', component: ResourcePublisherComponent}
+  { path: 'resources/:hash/publisher', component: ResourcePublisherComponent}
 ];
 
 @NgModule({

@@ -13,7 +13,7 @@
             <div class="column is-3">
                 <div class="buttons">
                     <ng-container *ngIf="resource.state === state.UNPUBLISHED">
-                        <a [routerLink]="['/resource-publisher']" class="button is-small is-primary is-light">
+                        <a [routerLink]="['/resources/' + resource.resourceHash + '/publisher']" class="button is-small is-primary is-light">
                             Publish
                         </a>
                     </ng-container>
