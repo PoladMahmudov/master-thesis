@@ -1,5 +1,5 @@
 export enum ResourceStateType {
-    UNPUBLISHED,
-    PUBLISHED,
-    REPORTED
+    UNPUBLISHED = 'UNPUBLISHED',
+    PUBLISHED = 'PUBLISHED',
+    REPORTED = 'REPORTED'
 }

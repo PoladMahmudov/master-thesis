@@ -5,11 +5,13 @@ import { PopupRoutingModule } from './popup-routing.module';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { PopupComponent } from './popup.component';
 import { ResourcesComponent } from './resources/resources.component';
+import { ResourcePublisherComponent } from './resource-publisher/resource-publisher.component';
 
 @NgModule({
   declarations: [
     PopupComponent,
-    ResourcesComponent
+    ResourcesComponent,
+    ResourcePublisherComponent
   ],
   imports: [
     BrowserModule,

@@ -1,33 +1,25 @@
-<div class="panel">
-    <p class="panel-heading">
-        Resources
-    </p>
-    <div class="panel-block">
-        <p class="control has-icons-left">
-            <input class="input" type="text" placeholder="Search">
-            <span class="icon is-left">
-                <i class="fas fa-search" aria-hidden="true"></i>
-            </span>
-        </p>
-    </div>
-    <p class="panel-tabs">
-        <a class="is-active">All</a>
-        <a>This tab</a>
-        <a>Private</a>
-        <a>Sources</a>
-        <a>Forks</a>
-    </p>
+<div class="section">
     <ng-container *ngFor="let resource of resources">
-        <div class="panel-block">
-            <fa-icon [icon]="faCoffee"></fa-icon>
-            {{resource.resourceUrl}}
-            {{resource.status}}
-            {{resource.state}}
+        <div class="columns resource-item">
+            <div class="column is-9">
+                <div class="label resource-name">{{retrieveFileName(resource.resourceUrl)}}</div>
+                <div class="tags">
+                    <span class="tag is-light" [ngClass]="resolveTagColor(resource.status)">
+                        {{resource.status | lowercase}}</span>
+                    <span class="tag" [ngClass]="resolveTagColor(resource.state)">
+                        {{resource.state | lowercase}}</span>
+                </div>
+            </div>
+            <div class="column is-3">
+                <div class="buttons">
+                    <a [routerLink]="['/resource-publisher']" class="button is-small is-primary is-light">
+                        Publish
+                    </a>
+                    <a [routerLink]="['/report-resource']" class="button is-small is-warning is-light">
+                        Report
+                    </a>
+                </div>
+            </div>
         </div>
     </ng-container>
-    <div class="panel-block">
-        <button class="button is-link is-outlined is-fullwidth">
-            Reset all filters
-        </button>
-    </div>
 </div>

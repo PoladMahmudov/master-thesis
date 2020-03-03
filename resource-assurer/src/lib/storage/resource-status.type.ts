@@ -1,5 +1,5 @@
 export enum ResourceStatusType {
-    DANGEROUS,
-    WARNING,
-    RELIABLE
+    DANGEROUS = 'DANGEROUS',
+    WARNING = 'WARNING',
+    RELIABLE = 'RELIABLE'
 }

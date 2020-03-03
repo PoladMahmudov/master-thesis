@@ -1,0 +1,16 @@
+.resource-item {
+    border-top: 1px solid #BFCAFF;
+    border-bottom: 1px solid #BFCAFF;
+
+    &:last-child {
+        border-bottom: unset;
+    }
+
+    &:first-child {
+        border-top: unset;
+    }
+}
+
+.resource-name {
+    word-break: break-all;
+}
