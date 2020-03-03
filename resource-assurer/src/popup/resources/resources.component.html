@@ -12,12 +12,16 @@
             </div>
             <div class="column is-3">
                 <div class="buttons">
-                    <a [routerLink]="['/resource-publisher']" class="button is-small is-primary is-light">
-                        Publish
-                    </a>
-                    <a [routerLink]="['/report-resource']" class="button is-small is-warning is-light">
-                        Report
-                    </a>
+                    <ng-container *ngIf="resource.state === state.UNPUBLISHED">
+                        <a [routerLink]="['/resource-publisher']" class="button is-small is-primary is-light">
+                            Publish
+                        </a>
+                    </ng-container>
+                    <ng-container *ngIf="resource.state !== state.UNPUBLISHED">
+                        <a [routerLink]="['/report-resource']" class="button is-small is-link is-light">
+                            Report
+                        </a>
+                    </ng-container>
                 </div>
             </div>
         </div>

@@ -1,6 +1,6 @@
 import { Resource } from './resource';
 
-export class StorageHelper {
+export class BrowserStorageHelper {
 
     /**
      * The browser's storage alias for resources.
@@ -32,17 +32,14 @@ export class StorageHelper {
      * 
      * @param resource to be stored
      */
-    public storeResource(resource: Resource): void {
+    public store(resource: Resource): void {
         this.getStoredResource(resource.tabId)
             .then((resources) => {
-                if (!resources) {
-                    resources = {};
-                }
                 // set new resource value to resources
                 resources[resource.resourceHash] = resource;
                 // create new resources object
                 const resourcesObj = {};
-                resourcesObj[StorageHelper.resourceAlias(resource.tabId)] = resources;
+                resourcesObj[BrowserStorageHelper.resourceAlias(resource.tabId)] = resources;
 
                 // TODO: Not effective. Resources being stored in parallel could be lost.
                 browser.storage.local
@@ -60,7 +57,7 @@ export class StorageHelper {
      * @param tabId identification number of the tab
      * @returns promise of resource array
      */
-    public getResources(tabId: number): Promise<Resource[]> {
+    public getByTab(tabId: number): Promise<Resource[]> {
         return this.getStoredResource(tabId)
             .then(resourceMap => Object.values(resourceMap));
     }
@@ -71,14 +68,15 @@ export class StorageHelper {
      * @param tabId identification number of the tab
      * @returns promise of void
      */
-    public deleteResources(tabId: number): Promise<void> {
-        return browser.storage.local.remove(StorageHelper.resourceAlias(tabId));
+    public deleteByTab(tabId: number): Promise<void> {
+        return browser.storage.local.remove(BrowserStorageHelper.resourceAlias(tabId));
     }
 
     private getStoredResource(tabId: number): Promise<any> {
         return browser.storage.local
-            .get(StorageHelper.resourceAlias(tabId))
-            .then(storage => storage[StorageHelper.resourceAlias(tabId)]);
+            .get(BrowserStorageHelper.resourceAlias(tabId))
+            .then(storage => storage[BrowserStorageHelper.resourceAlias(tabId)])
+            .then(storage => storage || {});
     }
 
     private setBadgeText(resourceCount: number, tabId: number) {
@@ -91,7 +89,7 @@ export class StorageHelper {
     }
 
     private postStore(resource: Resource) {
-        this.getResources(resource.tabId)
+        this.getByTab(resource.tabId)
             .then(resources => this.setBadgeText(resources.length, resource.tabId));
     }
 }

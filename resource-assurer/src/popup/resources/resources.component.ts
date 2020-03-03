@@ -1,7 +1,6 @@
 import { Component, OnInit, OnDestroy } from '@angular/core';
-import { faCoffee } from '@fortawesome/free-solid-svg-icons';
 import { Resource } from 'src/lib/storage/resource';
-import { StorageHelper } from 'src/lib/storage/storage-helper';
+import { BrowserStorageHelper } from 'src/lib/storage/browser-storage-helper';
 import { ResourceStateType } from 'src/lib/storage/resource-state.type';
 import { ResourceStatusType } from 'src/lib/storage/resource-status.type';
 
@@ -12,16 +11,13 @@ import { ResourceStatusType } from 'src/lib/storage/resource-status.type';
 })
 export class ResourcesComponent implements OnInit, OnDestroy {
 
-  readonly faCoffee = faCoffee;
+  readonly state = ResourceStateType;
 
   private _resources: Resource[] = [];
-  private readonly storage: StorageHelper;
+  private readonly storage: BrowserStorageHelper;
 
   constructor() {
-    this.storage = new StorageHelper();
-    this.getCurrentTab().then(tab =>
-      console.log('[Current TAB]', tab)
-    );
+    this.storage = new BrowserStorageHelper();
   }
 
   get resources(): Resource[] {
@@ -35,7 +31,6 @@ export class ResourcesComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     browser.storage.onChanged.removeListener(this.storageListener);
-    this.deleteResources();
   }
 
   public resolveTagColor(value: ResourceStateType | ResourceStatusType): string {
@@ -71,21 +66,16 @@ export class ResourcesComponent implements OnInit, OnDestroy {
 
   private initResources(): void {
     this.getCurrentTab().then(tab =>
-      this.storage.getResources(tab)
+      this.storage.getByTab(tab)
         .then(resources => this._resources = resources)
     );
   }
 
   private storageListener = (changes, storageName) => {
     this.getCurrentTab().then(tab => {
-      if (storageName === StorageHelper.resourceAlias(tab))
+      if (storageName === BrowserStorageHelper.resourceAlias(tab))
         this._resources = changes.resources.newValue as Resource[];
     });
-  }
-
-  private deleteResources() {
-    this.getCurrentTab()
-      .then(tab => this.storage.deleteResources(tab));
   }
 
   private getCurrentTab(): Promise<number> {
