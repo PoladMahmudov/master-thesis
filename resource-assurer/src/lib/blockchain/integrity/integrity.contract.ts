@@ -32,10 +32,10 @@ export class IntegrityContract extends ContractBase {
                 { blocksBehind: 3, expireSeconds: 30 }
             );
             // TODO: browser notify
-            console.log('Resource publish result', result);
+            console.log('[Transaction result]', result);
         } catch (e) {
             // TODO: browser notify
-            console.error('Caught exception: ' + e);
+            console.error('[Caught exception]' + e);
             if (e instanceof RpcError)
                 console.error(JSON.stringify(e.json, null, 2));
         }
@@ -51,7 +51,7 @@ export class IntegrityContract extends ContractBase {
                     actor: user,
                     permission: 'active',
                 }],
-                data: data,
+                data: {...data, user: user},
             }]
         }
     }

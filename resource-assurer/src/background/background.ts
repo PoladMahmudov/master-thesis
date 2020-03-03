@@ -2,10 +2,10 @@ import { BackgroundHelper } from './background-helper';
 import { Resource } from 'src/lib/storage/resource';
 import { ResourceStateType } from 'src/lib/storage/resource-state.type';
 import { ResourceStatusType } from 'src/lib/storage/resource-status.type';
-import { StorageHelper } from 'src/lib/storage/storage-helper';
+import { BrowserStorageHelper } from 'src/lib/storage/browser-storage-helper';
 
 const helper = new BackgroundHelper();
-const storage = new StorageHelper();
+const storage = new BrowserStorageHelper();
 
 // https://developer.mozilla.org/en-US/docs/Mozilla/Add-ons/WebExtensions/API/webRequest/StreamFilter/ondata
 function listener(details) {
@@ -44,7 +44,7 @@ function listener(details) {
             status: status
         };
         // store to browser storage
-        storage.storeResource(resource);
+        setTimeout(() => storage.store(resource), 500);
         streamFilter['close']();
     }
 }

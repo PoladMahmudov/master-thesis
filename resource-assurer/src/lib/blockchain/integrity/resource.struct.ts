@@ -3,4 +3,5 @@ export class ResourceStruct {
     hash: string;
     uri: string;
     repo_uri: string;
+    user: string;
 }
