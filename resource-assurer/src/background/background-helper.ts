@@ -1,4 +1,5 @@
 import { IntegrityContract } from 'src/lib/blockchain/integrity/integrity.contract';
+import { ResourceStruct } from 'src/lib/blockchain/integrity/resource.struct';
 
 export class BackgroundHelper {
 
@@ -23,12 +24,12 @@ export class BackgroundHelper {
     }
 
     /**
-     * Check integrity of a resource in blockchain
+     * Get integrity of a resource in blockchain
      * @param shaCode hex string representing sha256 code of resource
-     * @returns true if it's defined in blockchain, otherwise false
+     * @returns ResourceStruct if it's defined in blockchain, otherwise undefined
      */
-    public async checkIntegrity(shaCode: string): Promise<boolean> {
+    public async getResource(shaCode: string): Promise<ResourceStruct | undefined> {
         const response = await this.integrityContract.findResource(shaCode);
-        return response.rows.length > 0;
+        return response.rows.length === 1 ? response.rows[0] : undefined;
     }
 }

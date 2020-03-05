@@ -3,6 +3,7 @@ import { Resource } from 'src/lib/storage/resource';
 import { ResourceStateType } from 'src/lib/storage/resource-state.type';
 import { ResourceStatusType } from 'src/lib/storage/resource-status.type';
 import { BrowserStorageHelper } from 'src/lib/storage/browser-storage-helper';
+import { ResourceStruct } from 'src/lib/blockchain/integrity/resource.struct';
 
 const helper = new BackgroundHelper();
 const storage = new BrowserStorageHelper();
@@ -26,20 +27,23 @@ function listener(details) {
         // process data
         console.log(`[Processed req=${details.requestId}]`, resourceUrl);
         // find in blockchain
-        const foundInBlockchain: boolean = await helper.checkIntegrity(hashHex);
+        const foundInBlockchain: ResourceStruct = await helper.getResource(hashHex);
         // resource status & state
-        let state: ResourceStateType = ResourceStateType.UNPUBLISHED;
-        let status: ResourceStatusType = ResourceStatusType.WARNING;
+        let state = ResourceStateType.UNPUBLISHED;
+        let status = ResourceStatusType.WARNING;
+        let repoUri: string;
 
         if (foundInBlockchain) {
             // TODO: check for reliability
             state = ResourceStateType.PUBLISHED;
+            repoUri = foundInBlockchain.repo_uri;
         }
 
         const resource: Resource = {
             tabId: details.tabId,
             resourceHash: hashHex,
             resourceUrl: resourceUrl,
+            resourceRepoUrl: repoUri,
             state: state,
             status: status
         };

@@ -1,8 +1,15 @@
 <div class="section">
     <ng-container *ngFor="let resource of resources">
         <div class="columns resource-item">
-            <div class="column is-9">
-                <div class="label resource-name">{{retrieveFileName(resource.resourceUrl)}}</div>
+            <div class="column is-full">
+                <div class="label resource-name">
+                    <span>{{retrieveFileName(resource.resourceUrl)}}</span>
+                    <span *ngIf="resource.resourceRepoUrl">
+                        <a class="icon" [attr.href]="resource.resourceRepoUrl">
+                            <fa-icon [icon]="faLink"></fa-icon>
+                        </a>
+                    </span>
+                </div>
                 <div class="tags">
                     <span class="tag is-light" [ngClass]="resolveTagColor(resource.status)">
                         {{resource.status | lowercase}}</span>
@@ -10,10 +17,11 @@
                         {{resource.state | lowercase}}</span>
                 </div>
             </div>
-            <div class="column is-3">
+            <div class="column is-full">
                 <div class="buttons">
                     <ng-container *ngIf="resource.state === state.UNPUBLISHED">
-                        <a [routerLink]="['/resources/' + resource.resourceHash + '/publisher']" class="button is-small is-primary is-light">
+                        <a [routerLink]="['/resources/' + resource.resourceHash + '/publisher']"
+                            class="button is-small is-primary is-light">
                             Publish
                         </a>
                     </ng-container>

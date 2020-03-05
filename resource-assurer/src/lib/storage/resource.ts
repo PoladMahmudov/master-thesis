@@ -5,6 +5,7 @@ export class Resource {
     tabId: number;
     resourceHash: string;
     resourceUrl: string;
+    resourceRepoUrl: string;
     state: ResourceStateType;
     status: ResourceStatusType;
 }

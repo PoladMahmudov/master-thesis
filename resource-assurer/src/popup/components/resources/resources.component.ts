@@ -3,7 +3,7 @@ import { Resource } from 'src/lib/storage/resource';
 import { BrowserStorageHelper } from 'src/lib/storage/browser-storage-helper';
 import { ResourceStateType } from 'src/lib/storage/resource-state.type';
 import { ResourceStatusType } from 'src/lib/storage/resource-status.type';
-import { async } from '@angular/core/testing';
+import { faLink } from '@fortawesome/free-solid-svg-icons'
 
 @Component({
   selector: 'popup-resources',
@@ -13,6 +13,7 @@ import { async } from '@angular/core/testing';
 export class ResourcesComponent implements OnInit, OnDestroy {
 
   readonly state = ResourceStateType;
+  readonly faLink = faLink;
 
   private _resources: Resource[] = [];
 

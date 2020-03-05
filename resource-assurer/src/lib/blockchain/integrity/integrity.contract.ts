@@ -17,7 +17,8 @@ export class IntegrityContract extends ContractBase {
      * @returns rows array with either empty or single resource value
      */
     public async findResource(resourceHash: string): Promise<TableResponse<ResourceStruct>> {
-        return await this.rpc.get_table_rows(new ResourceRequest(resourceHash));
+        const searchingHash = this.prepareSearchingHash(resourceHash);
+        return await this.rpc.get_table_rows(new ResourceRequest(searchingHash));
     }
 
     /**
@@ -41,6 +42,29 @@ export class IntegrityContract extends ContractBase {
         }
     }
 
+    // reformat hash
+    // https://eosio.stackexchange.com/questions/4116/how-to-use-checksum256-secondary-index-to-get-table-rows
+    private prepareSearchingHash(hash: string): string {
+        // divide in two
+        if (hash.length % 2 > 0)
+            throw `Incorrect sha256 code format. 
+            Length should be even, but it\'s ${hash.length / 2}`;
+        const part1 = this.changeEndianness(hash.substr(0, hash.length / 2));
+        const part2 = this.changeEndianness(hash.substr(hash.length / 2, hash.length));
+        return part1 + part2;
+    }
+
+    // 0A1B2D3C => 3C2D1B0A
+    private changeEndianness(str: string) {
+        const result = [];
+        let len = str.length - 2;
+        while (len >= 0) {
+            result.push(str.substr(len, 2));
+            len -= 2;
+        }
+        return result.join('');
+    }
+
     // create transaction for resource publishing action
     private createTransaction(data: ResourceStruct, user: string): Transaction<ResourceStruct> {
         return {
@@ -51,7 +75,7 @@ export class IntegrityContract extends ContractBase {
                     actor: user,
                     permission: 'active',
                 }],
-                data: {...data, user: user},
+                data: { ...data, user: user },
             }]
         }
     }
