@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { Resource } from 'src/lib/storage/resource';
 import { BrowserStorageHelper } from 'src/lib/storage/browser-storage-helper';
 import { ResourceStateType } from 'src/lib/storage/resource-state.type';
@@ -9,7 +9,7 @@ import { faLink } from '@fortawesome/free-solid-svg-icons'
   templateUrl: './resources.component.html',
   styleUrls: ['./resources.component.scss']
 })
-export class ResourcesComponent implements OnInit, OnDestroy {
+export class ResourcesComponent implements OnInit {
 
   readonly state = ResourceStateType;
   readonly faLink = faLink;
@@ -25,11 +25,7 @@ export class ResourcesComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.initResources();
-    browser.storage.onChanged.addListener(this.storageListener);
-  }
-
-  ngOnDestroy(): void {
-    browser.storage.onChanged.removeListener(this.storageListener);
+    this.startStorageListener();
   }
 
   public resolveTagColor(value: ResourceStateType): string {
@@ -60,9 +56,11 @@ export class ResourcesComponent implements OnInit, OnDestroy {
       .then(resources => this._resources = resources);
   }
 
-  private storageListener = async (changes, storageName) => {
-    if (storageName === BrowserStorageHelper.resourceAlias(await this.getCurrentTab()))
-      this._resources = changes.resources.newValue as Resource[];
+  private async startStorageListener() {
+    this.storage.addChangeListener(
+      await this.getCurrentTab(),
+      (resources) => this._resources = resources
+    );
   }
 
   private getCurrentTab(): Promise<number> {

@@ -84,6 +84,20 @@ export class BrowserStorageHelper {
         return browser.storage.local.remove(BrowserStorageHelper.resourceAlias(tabId));
     }
 
+    /**
+     * Triggers callback with updated list of resources for given tab
+     * 
+     * @param tabId identification number of browser tab 
+     * @param callback function called when change is detected
+     */
+    public addChangeListener(tabId: number, callback: (resources: Resource[]) => void) {
+        browser.storage.onChanged.addListener((changes, storageName: string) => {
+            if (storageName === BrowserStorageHelper.resourceAlias(tabId)) {
+                callback(changes.resources.newValue);
+            }
+        });
+    }
+
     private getStoredResources(tabId: number): Promise<any> {
         return browser.storage.local
             .get(BrowserStorageHelper.resourceAlias(tabId))
