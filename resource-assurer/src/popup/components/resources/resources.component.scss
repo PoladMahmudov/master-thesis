@@ -1,14 +1,9 @@
-.resource-item {
-    border-top: 1px solid #BFCAFF;
-    border-bottom: 1px solid #BFCAFF;
+.section {
+    background-color: whitesmoke;
+}
 
-    &:last-child {
-        border-bottom: unset;
-    }
-
-    &:first-child {
-        border-top: unset;
-    }
+.box {
+    margin: 1em 0;
 }
 
 .resource-name {
@@ -20,12 +15,18 @@
 
 .resource-tags {
     display: flex;
-    align-content: center;
-
+    align-items: center;
+    .icon {
+        margin: 0 .1em;
+    }
     span.tag-elem {
         margin-right: .5em;
+        &.progress-wrapper {
+            display: flex;
+            align-items: center;
+            margin: unset;
+        }
     }
-    
     progress.progress {
         display: inline-block;
         max-width: 5em;

@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Resource } from 'src/lib/storage/resource';
 import { BrowserStorageHelper } from 'src/lib/storage/browser-storage-helper';
 import { ResourceStateType } from 'src/lib/storage/resource-state.type';
-import { faLink } from '@fortawesome/free-solid-svg-icons'
+import { faLink, faThumbsUp, faThumbsDown } from '@fortawesome/free-solid-svg-icons'
 import { Report } from 'src/lib/storage/report';
 
 @Component({
@@ -14,6 +14,8 @@ export class ResourcesComponent implements OnInit {
 
   readonly state = ResourceStateType;
   readonly faLink = faLink;
+  readonly faThumbsUp = faThumbsUp;
+  readonly faThumbsDown = faThumbsDown;
 
   private _resources: Resource[] = [];
 
