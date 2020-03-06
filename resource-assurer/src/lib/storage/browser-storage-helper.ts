@@ -91,9 +91,10 @@ export class BrowserStorageHelper {
      * @param callback function called when change is detected
      */
     public addChangeListener(tabId: number, callback: (resources: Resource[]) => void) {
-        browser.storage.onChanged.addListener((changes, storageName: string) => {
-            if (storageName === BrowserStorageHelper.resourceAlias(tabId)) {
-                callback(changes.resources.newValue);
+        browser.storage.onChanged.addListener((changes, areaName: string) => {
+            const tabChanges = changes[BrowserStorageHelper.resourceAlias(tabId)];
+            if (tabChanges) {
+                callback(tabChanges.newValue);
             }
         });
     }
