@@ -13,4 +13,7 @@
 
 .resource-name {
     word-break: break-all;
+    max-width: 20em;
+    max-height: 5em;
+    overflow-y: hidden;
 }

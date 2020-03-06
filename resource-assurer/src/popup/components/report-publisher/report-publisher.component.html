@@ -1,0 +1,51 @@
+<div class="section">
+    <ng-container *ngIf="struct">
+        <form #reliabilityForm="ngForm" (ngSubmit)=submitStruct()>
+            <div class="field">
+                <label class="label">Resource hash</label>
+                <div class="control">
+                    <input [(ngModel)]="struct.resource_hash" #resourceHash="ngModel" name="resourceHash" class="input"
+                        type="text" placeholder="Resource file hash-code" disabled required>
+                </div>
+            </div>
+            <div class="field">
+                <label class="label">URI</label>
+                <div class="control">
+                    <input [(ngModel)]="struct.report_uri" #reportUri="ngModel" name="reportUri" class="input"
+                        type="text" placeholder="Full report URI" required>
+                </div>
+            </div>
+            <div class="field">
+                <label class="label">Brief description</label>
+                <div class="control">
+                    <textarea [(ngModel)]="struct.description" #reportDescription="ngModel" name="reportDescription"
+                        class="textarea" placeholder="Brief description on security verdict" rows="2"
+                        required></textarea>
+                </div>
+            </div>
+            <div class="field">
+                <label class="label">Verdict</label>
+                <div class="control">
+                    <label class="radio">
+                        <input [(ngModel)]="struct.verdict" type="radio" #reportPositiveVerdict="ngModel" name="reportVerdict"
+                            [value]="true" [checked]="struct.verdict">
+                        <span class="has-text-primary has-text-weight-semibold report-verdict-label">Secure</span>
+                    </label>
+                    <label class="radio">
+                        <input [(ngModel)]="struct.verdict" type="radio" #reportNegativeVerdict="ngModel" name="reportVerdict"
+                            [value]="false" [checked]="struct.verdict">
+                        <span class="has-text-danger has-text-weight-semibold report-verdict-label">Insecure</span>
+                    </label>
+                </div>
+            </div>
+            <div class="field is-grouped">
+                <div class="control">
+                    <button class="button is-link" type="submit" [disabled]="!reliabilityForm.valid">Submit</button>
+                </div>
+                <div class="control">
+                    <button [routerLink]="['/']" type="button" class="button is-link is-light">Cancel</button>
+                </div>
+            </div>
+        </form>
+    </ng-container>
+</div>

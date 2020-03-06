@@ -2,7 +2,6 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Resource } from 'src/lib/storage/resource';
 import { BrowserStorageHelper } from 'src/lib/storage/browser-storage-helper';
 import { ResourceStateType } from 'src/lib/storage/resource-state.type';
-import { ResourceStatusType } from 'src/lib/storage/resource-status.type';
 import { faLink } from '@fortawesome/free-solid-svg-icons'
 
 @Component({
@@ -33,7 +32,7 @@ export class ResourcesComponent implements OnInit, OnDestroy {
     browser.storage.onChanged.removeListener(this.storageListener);
   }
 
-  public resolveTagColor(value: ResourceStateType | ResourceStatusType): string {
+  public resolveTagColor(value: ResourceStateType): string {
     switch (value) {
       case ResourceStateType.PUBLISHED:
         return 'is-dark';
@@ -41,14 +40,6 @@ export class ResourcesComponent implements OnInit, OnDestroy {
         return 'is-primary';
       case ResourceStateType.UNPUBLISHED:
         return 'is-warning'
-
-      case ResourceStatusType.RELIABLE:
-        return 'is-success';
-      case ResourceStatusType.WARNING:
-        return 'is-warning';
-      case ResourceStatusType.DANGEROUS:
-        return 'is-danger';
-
       default:
         return 'is-light';
     }

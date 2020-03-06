@@ -1,30 +1,30 @@
+import { ReportStruct } from './report.struct';
 import { TableResponse } from '../table-response';
-import { ResourceStruct } from './resource.struct';
+import { ReportRequest } from './report-request';
 import { RpcError } from 'eosjs';
-import { ResourceRequest } from './resource-request';
 import { BaseContract } from '../base.contract';
 
-export class IntegrityContract extends BaseContract<ResourceStruct> {
+export class ReliabilityContract extends BaseContract<ReportStruct> {
 
     constructor() {
-        super('integrity');
+        super('reliability');
     }
 
     /**
-     * Find resource by hash
+     * Find reports for given resource-hash
      * @param resourceHash is a sha256 string parameter
-     * @returns rows array with either empty or single resource value
+     * @returns rows array with either empty or reports value
      */
-    public async findResource(resourceHash: string): Promise<TableResponse<ResourceStruct>> {
+    public async findReports(resourceHash: string): Promise<TableResponse<ReportStruct>> {
         const searchingHash = this.prepareSearchingHash(resourceHash);
-        return await this.rpc.get_table_rows(new ResourceRequest(searchingHash));
+        return await this.rpc.get_table_rows(new ReportRequest(searchingHash));
     }
 
     /**
-     * Publishes new resource data
-     * @param data is a raw resource structure
+     * Publishes new report data
+     * @param data is a raw report structure
      */
-    public async publish(data: ResourceStruct): Promise<void> {
+    public async publish(data: ReportStruct): Promise<void> {
         const transaction = this.createTransaction(data);
         try {
             const result = await this.api.transact(
@@ -40,4 +40,5 @@ export class IntegrityContract extends BaseContract<ResourceStruct> {
                 console.error(JSON.stringify(e.json, null, 2));
         }
     }
+
 }

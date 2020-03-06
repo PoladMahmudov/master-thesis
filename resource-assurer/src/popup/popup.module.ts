@@ -9,12 +9,15 @@ import { ResourcesComponent } from './components/resources/resources.component';
 import { ResourcePublisherComponent } from './components/resource-publisher/resource-publisher.component';
 import { BrowserStorageHelper } from 'src/lib/storage/browser-storage-helper';
 import { IntegrityContract } from 'src/lib/blockchain/integrity/integrity.contract';
+import { ReportPublisherComponent } from './components/report-publisher/report-publisher.component';
+import { ReliabilityContract } from 'src/lib/blockchain/reliability/reliability.contract';
 
 @NgModule({
   declarations: [
     PopupComponent,
     ResourcesComponent,
-    ResourcePublisherComponent
+    ResourcePublisherComponent,
+    ReportPublisherComponent
   ],
   imports: [
     BrowserModule,
@@ -24,7 +27,8 @@ import { IntegrityContract } from 'src/lib/blockchain/integrity/integrity.contra
   ],
   providers: [
     BrowserStorageHelper,
-    IntegrityContract
+    IntegrityContract,
+    ReliabilityContract
   ],
   bootstrap: [PopupComponent]
 })
