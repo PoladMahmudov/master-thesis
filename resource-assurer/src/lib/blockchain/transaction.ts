@@ -1,4 +1,6 @@
-export interface Transaction<D> {
+import { Struct } from './struct';
+
+export interface Transaction<D extends Struct> {
     actions: Action<D>[];
 }
 

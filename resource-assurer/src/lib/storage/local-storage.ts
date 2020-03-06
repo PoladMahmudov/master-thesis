@@ -1,7 +1,7 @@
 import { Resource } from './resource';
 import { EventEmitter } from '@angular/core';
-import { Subscription } from 'rxjs';
 
+/** @deprecated */
 export class LocalStorage {
     protected static _instance: LocalStorage;
 

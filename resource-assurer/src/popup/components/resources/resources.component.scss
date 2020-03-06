@@ -17,3 +17,17 @@
     max-height: 5em;
     overflow-y: hidden;
 }
+
+.resource-tags {
+    display: flex;
+    align-content: center;
+
+    span.tag-elem {
+        margin-right: .5em;
+    }
+    
+    progress.progress {
+        display: inline-block;
+        max-width: 5em;
+    }
+}

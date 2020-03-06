@@ -1,9 +1,10 @@
-import { Api, JsonRpc } from 'eosjs';
+import { Api, JsonRpc, RpcError } from 'eosjs';
 import { JsSignatureProvider } from 'eosjs/dist/eosjs-jssig';
 import { Transaction } from './transaction';
 import { Struct } from './struct';
+import { TableResponse } from './table-response';
 
-// Base class for all contracts' manipulations
+/** Base class for all contracts' manipulations */
 export abstract class BaseContract<S extends Struct> {
 
     // TODO: retrieve from browser storage
@@ -26,6 +27,34 @@ export abstract class BaseContract<S extends Struct> {
             textEncoder: new TextEncoder()
         });
     }
+
+    /**
+     * Publishes new contract data
+     * @param data is a raw contract structure
+     */
+    public async publish(data: S): Promise<void> {
+        const transaction = this.createTransaction(data);
+        try {
+            const result = await this.api.transact(
+                transaction,
+                { blocksBehind: 3, expireSeconds: 30 }
+            );
+            // TODO: browser notify
+            console.log('[Transaction result]', result);
+        } catch (e) {
+            // TODO: browser notify
+            console.error('[Caught exception]' + e);
+            if (e instanceof RpcError)
+                console.error(JSON.stringify(e.json, null, 2));
+        }
+    }
+
+    /**
+     * Find contract data by hash
+     * @param hash is a sha256 string parameter
+     * @returns rows array with either empty, or contract data
+     */
+    abstract find(hash: string): Promise<TableResponse<S>>;
 
     /**
      * An explanation of how the value should be passed via cleos to derive a result. 

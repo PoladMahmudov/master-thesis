@@ -3,6 +3,7 @@ import { Resource } from 'src/lib/storage/resource';
 import { BrowserStorageHelper } from 'src/lib/storage/browser-storage-helper';
 import { ResourceStateType } from 'src/lib/storage/resource-state.type';
 import { faLink } from '@fortawesome/free-solid-svg-icons'
+import { Report } from 'src/lib/storage/report';
 
 @Component({
   selector: 'popup-resources',
@@ -49,6 +50,14 @@ export class ResourcesComponent implements OnInit {
       return uri;
     }
     return subs[subs.length - 1];
+  }
+
+  public countReliabilityRate(reports: Report[]): number {
+    if (reports.length <= 0) {
+      return 0;
+    }
+    const reliable = reports.reduce((acc, current) => acc + (current.verdict ? 1 : 0), 0);
+    return reliable / reports.length * 100;
   }
 
   private async initResources(): Promise<void> {

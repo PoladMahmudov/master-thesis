@@ -48,12 +48,12 @@ export class BackgroundHelper {
     }
 
     private async getResourceStruct(shaCode: string): Promise<ResourceStruct | undefined> {
-        const response = await this.integrityContract.findResource(shaCode);
+        const response = await this.integrityContract.find(shaCode);
         return response.rows.length === 1 ? response.rows[0] : undefined;
     }
 
     private async getReportStructs(shaCode: string): Promise<ReportStruct[]> {
-        const response = await this.reliabilityContract.findReports(shaCode);
+        const response = await this.reliabilityContract.find(shaCode);
         return response.rows;
     }
 

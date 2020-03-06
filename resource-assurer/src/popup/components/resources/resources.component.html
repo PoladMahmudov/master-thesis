@@ -10,9 +10,21 @@
                         </a>
                     </span>
                 </div>
-                <div class="tags">
-                    <span class="tag" [ngClass]="resolveTagColor(resource.state)">
-                        {{resource.state | lowercase}}</span>
+                <div class="resource-tags">
+                    <span class="tag tag-elem" [ngClass]="resolveTagColor(resource.state)">
+                        {{resource.state | lowercase}}
+                    </span>
+                    <ng-container *ngIf="resource.state !== state.UNPUBLISHED">
+                        <span class="tag tag-elem is-italic">
+                            @{{resource.owner}}
+                        </span>
+                    </ng-container>
+                    <ng-container *ngIf="resource.reports.length > 0">
+                        <span class="tag-elem">
+                            <progress class="progress is-medium" [value]="countReliabilityRate(resource.reports)"
+                                max="100"></progress>
+                        </span>
+                    </ng-container>
                 </div>
             </div>
             <div class="column is-full">

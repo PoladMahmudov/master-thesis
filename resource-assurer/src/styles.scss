@@ -1,1 +1,20 @@
-/* You can add global styles to this file, and also import other style files */
+/* Bulma default values */
+@import "../node_modules/bulma/sass/utilities/_all.sass";
+
+// progress bar
+$progress-bar-background-color: $red; // doesn't work
+$progress-value-background-color: $green;
+$progress-border-radius: $radius;
+
+// section
+$section-padding: 1rem;
+$section-padding-medium: 1rem;
+$section-padding-large: 1rem;
+
+/* Rest of Bulma */
+@import "~bulma/bulma.sass";
+
+/* Brute overrides */
+.progress {
+    background-color: $red;
+}

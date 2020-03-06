@@ -32,7 +32,6 @@
               "src/manifest.json"
             ],
             "styles": [
-              "node_modules/bulma/bulma.sass",
               "src/styles.scss"
             ],
             "scripts": []
