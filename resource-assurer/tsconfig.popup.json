@@ -14,5 +14,8 @@
   "include": [
     "src/**/*.ts"
   ],
-  "exclude": []
+  "exclude": [
+    "src/environments/environment.prod.ts",
+    "src/lib/storage/local-storage.ts"
+  ]
 }

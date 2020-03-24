@@ -29,7 +29,7 @@ function listener(details) {
     // process data after downloaded
     streamFilter['onstop'] = async (event) => {
         // encode
-        const hashHex: string = await helper.encodeSha256(data);
+        const hashHex: string = await helper.encode(data);
         // process data
         console.log(`[Processed req=${details.requestId}]`, resourceUrl);
         // find in blockchain

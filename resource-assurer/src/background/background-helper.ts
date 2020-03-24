@@ -17,7 +17,7 @@ export class BackgroundHelper {
     }
 
     // https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/digest
-    public async encodeSha256(data: ArrayBuffer[]): Promise<string> {
+    public async encode(data: ArrayBuffer[]): Promise<string> {
         // aggregate
         let buffer = await new Blob(data)['arrayBuffer']();
         // encrypt
