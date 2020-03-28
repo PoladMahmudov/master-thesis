@@ -12,6 +12,18 @@ export class ResourceManager {
     private readonly storage = new BrowserStorageHelper();
 
     /**
+     * Refreshes resource by retrieving resource and its reports from blockchain.
+     * Then store it in browser's extension storage.
+     * 
+     * @param hash 
+     * @returns resource with reports
+     */
+    public async refreshResource(hash: string): Promise<Resource> {
+        const resource = await this.storage.getByHash(hash);
+        return this.retrieveAndStoreResource(resource.tabId, resource.resourceHash, resource.resourceUrl);
+    }
+
+    /**
      * Retrieve resource and its reports from blockchain.
      * Then store it in browser's extension storage.
      * 

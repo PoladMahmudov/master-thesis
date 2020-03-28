@@ -70,7 +70,7 @@ export class ResourcesComponent implements OnInit {
   private async startStorageListener() {
     this.storage.addChangeListener(
       await this.getCurrentTab(),
-      (resources) => this._resources = resources
+      () => this.initResources()
     );
   }
 

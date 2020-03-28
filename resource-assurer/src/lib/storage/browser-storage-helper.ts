@@ -3,50 +3,74 @@ import { Resource } from './resource';
 export class BrowserStorageHelper {
 
     /**
-     * The browser's storage alias for resources.
+     * The browser's storage alias for tabs.
      * Generates storage name by combining static string with tab ID.
      * 
      * @param tabId identification number of the tab
      * @returns string
-     *  */
-    public static readonly resourceAlias = (tabId: number) => `resources-${tabId}`;
+     */
+    private static readonly tabAlias = (tabId: number) => `tab-${tabId}`;
 
     /**
      * Stores new resource in browser storage.
-     * Every resource is stored per tab ID.
-     * Storage structure for the resources looks as following following:
+     * Every resource is stored per its hash-code.
+     * Storage structure for the resources looks as following:
      * @example
      * { 
-     *   "resources-1": {
      *      "12eefwef3r45h": {"tabId": 1, "resourceHash": "12eefwef3r45h", ...},
      *      "24keg43jksd33": {"tabId": 1, "resourceHash": "24keg43jksd33", ...},
      *      ...
-     *   },
-     *   "resources-2": {
-     *      "asj34j54h5hfn": {"tabId": 2, "resourceHash": "asj34j54h5hfn", ...},
-     *      "kegtrkt35ky56": {"tabId": 2, "resourceHash": "kegtrkt35ky56", ...},
-     *      ...
-     *   },
-     *    ...
      * }
      * 
      * @param resource to be stored
      */
-    public store(resource: Resource): void {
-        this.getStoredResources(resource.tabId)
-            .then((resources) => {
-                // set new resource value to resources
-                resources[resource.resourceHash] = resource;
-                // create new resources object
-                const resourcesObj = {};
-                resourcesObj[BrowserStorageHelper.resourceAlias(resource.tabId)] = resources;
+    public async store(resource: Resource): Promise<void> {
+        return browser.storage.local
+            // store new resources object in storage
+            .set({ [resource.resourceHash]: resource })
+            // upsert tab store info
+            .then(() => this.upsertTabResources(resource.tabId, resource.resourceHash));
+    }
 
-                // TODO: Not effective. Resources being stored in parallel could be lost.
-                browser.storage.local
-                    // store new resources object in storage
-                    .set(resourcesObj)
-                    // post store actions
-                    .then(() => this.postStore(resource));
+    /**
+     * Stores new resource hash in browser storage by tab ID.
+     * And updates badge state of the browser tab.
+     * Storage structure for the resources looks as following:
+     * @example
+     * { 
+     *      "tab-1": ["12eefwef3r45h", ...],
+     *      "tab-2": ["24keg43jksd33", ...],
+     *      ...
+     * }
+     * 
+     * @param tab ID where resource is assigned to
+     * @param resHash be stored by tab ID
+     */
+    private async upsertTabResources(tab: number, resHash: string): Promise<void> {
+        const alias = BrowserStorageHelper.tabAlias(tab);
+        return browser.storage.local
+            .get(alias) // get by alias from storage
+            .then(storage => storage[alias]) // get all associated hashes
+            // update hashes
+            .then((hashes: string[]) => {
+                // create new hashes array if doesn't exist 
+                if (!hashes) { return [resHash]; }
+                // if already included do nothing
+                if (hashes.includes(resHash)) { return; }
+                // otherwise add new one to all 
+                hashes.push(resHash);
+                return hashes;
+            })
+            // store hashes by tab alias
+            .then((hashes: string[]) => {
+                if (!hashes) { return; }
+                browser.storage.local.set({ [alias]: hashes });
+                return hashes.length;
+            })
+            // update tab's badge info
+            .then((hashCount: number) => {
+                if (!hashCount) { return; }
+                this.setBadgeText(hashCount, tab)
             });
     }
 
@@ -58,20 +82,28 @@ export class BrowserStorageHelper {
      * @returns promise of resource array
      */
     public getByTab(tabId: number): Promise<Resource[]> {
-        return this.getStoredResources(tabId)
-            .then(resourceMap => Object.values(resourceMap));
+        const alias = BrowserStorageHelper.tabAlias(tabId);
+        return browser.storage.local
+            .get(alias)
+            .then(storage => storage[alias]) // get all associated hashes
+            .then(hashes => hashes || [])
+            .then((hashes: string[]) => {
+                return browser.storage.local
+                    .get(hashes)
+                    .then(Object.values)
+            });
     }
 
     /**
      * Returns resource by hash-code
      * 
-     * @param tabId identification number of the tab
      * @param hash code of the resource uniquely identifying the resource
-     * @returns resource, or null, if not found 
+     * @returns resource if found, or null
      */
-    public getByHash(tabId: number, hash: string): Promise<Resource> {
-        return this.getByTab(tabId)
-            .then(resources => resources.find(res => res.resourceHash === hash));
+    public async getByHash(hash: string): Promise<Resource> {
+        return browser.storage.local
+            .get(hash)
+            .then(storage => storage[hash]);
     }
 
     /**
@@ -80,8 +112,8 @@ export class BrowserStorageHelper {
      * @param tabId identification number of the tab
      * @returns promise of void
      */
-    public deleteByTab(tabId: number): Promise<void> {
-        return browser.storage.local.remove(BrowserStorageHelper.resourceAlias(tabId));
+    public async deleteByTab(tabId: number): Promise<void> {
+        return browser.storage.local.remove(BrowserStorageHelper.tabAlias(tabId));
     }
 
     /**
@@ -90,33 +122,21 @@ export class BrowserStorageHelper {
      * @param tabId identification number of browser tab 
      * @param callback function called when change is detected
      */
-    public addChangeListener(tabId: number, callback: (resources: Resource[]) => void) {
+    public addChangeListener(tabId: number, callback: (resources: Resource[]) => void): void {
         browser.storage.onChanged.addListener((changes, areaName: string) => {
-            const tabChanges = changes[BrowserStorageHelper.resourceAlias(tabId)];
+            const tabChanges = changes[BrowserStorageHelper.tabAlias(tabId)];
             if (tabChanges) {
                 callback(tabChanges.newValue);
             }
         });
     }
 
-    private getStoredResources(tabId: number): Promise<any> {
-        return browser.storage.local
-            .get(BrowserStorageHelper.resourceAlias(tabId))
-            .then(storage => storage[BrowserStorageHelper.resourceAlias(tabId)])
-            .then(storage => storage || {});
-    }
-
-    private setBadgeText(resourceCount: number, tabId: number) {
-        browser.browserAction.setBadgeText(
+    private async setBadgeText(resourceCount: number, tabId: number): Promise<void> {
+        return browser.browserAction.setBadgeText(
             {
                 text: String(resourceCount),
                 tabId: tabId
             }
         );
-    }
-
-    private async postStore(resource: Resource): Promise<void> {
-        this.getByTab(resource.tabId)
-            .then(resources => this.setBadgeText(resources.length, resource.tabId));
     }
 }

@@ -4,6 +4,7 @@ import { BrowserStorageHelper } from 'src/lib/storage/browser-storage-helper';
 import { Resource } from 'src/lib/storage/resource';
 import { ReportStruct } from 'src/lib/blockchain/assurer/report.struct';
 import { AssurerContract } from 'src/lib/blockchain/assurer/assurer.contract';
+import { ResourceManager } from 'src/lib/resource-manager/resource-manager';
 
 @Component({
   selector: 'popup-report-publisher',
@@ -18,7 +19,8 @@ export class ReportPublisherComponent implements OnInit {
     private readonly route: ActivatedRoute,
     private readonly router: Router,
     private readonly storage: BrowserStorageHelper,
-    private readonly blockchain: AssurerContract
+    private readonly blockchain: AssurerContract,
+    private readonly resourceManager: ResourceManager
   ) { }
 
   ngOnInit(): void {
@@ -32,18 +34,13 @@ export class ReportPublisherComponent implements OnInit {
 
   submitStruct(): void {
     this.blockchain.post(this._struct)
+    .then(() => this.resourceManager.refreshResource(this._struct.resource_hash))
       .then(() => this.router.navigate(['/']));
   }
 
   private async getResource(hash: string) {
-    const tabId = await this.getCurrentTab();
-    this.storage.getByHash(tabId, hash)
+    this.storage.getByHash(hash)
       .then(res => this.initStruct(res));
-  }
-
-  private getCurrentTab(): Promise<number> {
-    return browser.tabs.query({ active: true, currentWindow: true })
-      .then(tab => tab[0].id);
   }
 
   private initStruct(resource: Resource): void {
