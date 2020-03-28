@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { BrowserStorageHelper } from 'src/lib/storage/browser-storage-helper';
-import { ReliabilityContract } from 'src/lib/blockchain/reliability/reliability.contract';
 import { Resource } from 'src/lib/storage/resource';
-import { ReportStruct } from 'src/lib/blockchain/reliability/report.struct';
+import { ReportStruct } from 'src/lib/blockchain/assurer/report.struct';
+import { AssurerContract } from 'src/lib/blockchain/assurer/assurer.contract';
 
 @Component({
   selector: 'popup-report-publisher',
@@ -18,7 +18,7 @@ export class ReportPublisherComponent implements OnInit {
     private readonly route: ActivatedRoute,
     private readonly router: Router,
     private readonly storage: BrowserStorageHelper,
-    private readonly blockchain: ReliabilityContract
+    private readonly blockchain: AssurerContract
   ) { }
 
   ngOnInit(): void {
@@ -31,7 +31,7 @@ export class ReportPublisherComponent implements OnInit {
   }
 
   submitStruct(): void {
-    this.blockchain.publish(this._struct)
+    this.blockchain.post(this._struct)
       .then(() => this.router.navigate(['/']));
   }
 

@@ -2,7 +2,6 @@ import { BackgroundHelper } from './background-helper';
 import { BrowserStorageHelper } from 'src/lib/storage/browser-storage-helper';
 
 const helper = new BackgroundHelper();
-const storage = new BrowserStorageHelper();
 
 /**
  * Listens to catch downloaded data from web server 
@@ -32,10 +31,8 @@ function listener(details) {
         const hashHex: string = await helper.encode(data);
         // process data
         console.log(`[Processed req=${details.requestId}]`, resourceUrl);
-        // find in blockchain
-        const resource = await helper.getResource(details.tabId, hashHex, resourceUrl);
-        // store to browser storage
-        setTimeout(() => storage.store(resource), 500);
+        // find in blockchain and store to browser storage
+        helper.storeResource(details.tabId, hashHex, resourceUrl);
         streamFilter['close']();
     }
 }

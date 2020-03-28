@@ -1,0 +1,162 @@
+{
+    "____comment": "This file was generated with eosio-abigen. DO NOT EDIT ",
+    "version": "eosio::abi/1.1",
+    "types": [],
+    "structs": [
+        {
+            "name": "post",
+            "base": "",
+            "fields": [
+                {
+                    "name": "resource_hash",
+                    "type": "checksum256"
+                },
+                {
+                    "name": "user",
+                    "type": "name"
+                },
+                {
+                    "name": "report_uri",
+                    "type": "string"
+                },
+                {
+                    "name": "description",
+                    "type": "string"
+                },
+                {
+                    "name": "verdict",
+                    "type": "bool"
+                }
+            ]
+        },
+        {
+            "name": "publish",
+            "base": "",
+            "fields": [
+                {
+                    "name": "hash",
+                    "type": "checksum256"
+                },
+                {
+                    "name": "user",
+                    "type": "name"
+                },
+                {
+                    "name": "uri",
+                    "type": "string"
+                },
+                {
+                    "name": "repo_uri",
+                    "type": "string"
+                }
+            ]
+        },
+        {
+            "name": "reports",
+            "base": "",
+            "fields": [
+                {
+                    "name": "id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "resource_hash",
+                    "type": "checksum256"
+                },
+                {
+                    "name": "user",
+                    "type": "name"
+                },
+                {
+                    "name": "report_uri",
+                    "type": "string"
+                },
+                {
+                    "name": "description",
+                    "type": "string"
+                },
+                {
+                    "name": "verdict",
+                    "type": "bool"
+                }
+            ]
+        },
+        {
+            "name": "resources",
+            "base": "",
+            "fields": [
+                {
+                    "name": "id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "hash",
+                    "type": "checksum256"
+                },
+                {
+                    "name": "user",
+                    "type": "name"
+                },
+                {
+                    "name": "uri",
+                    "type": "string"
+                },
+                {
+                    "name": "repo_uri",
+                    "type": "string"
+                }
+            ]
+        }
+    ],
+    "actions": [
+        {
+            "name": "post",
+            "type": "post",
+            "ricardian_contract": "---\r\nspec-version: 0.0.2\r\ntitle: Post\r\nsummary: This action will post a new audit report on web resource entry to reports table. Hash of the resource, full report URI, brief description of the report and final verdict on security level must be provided.\r\nicon:"
+        },
+        {
+            "name": "publish",
+            "type": "publish",
+            "ricardian_contract": "---\r\nspec-version: 0.0.2\r\ntitle: Publish\r\nsummary: This action will publish new web resource entry to resources table. Hash of the resource, server URI and version control repository URI must be provided.\r\nicon:"
+        }
+    ],
+    "tables": [
+        {
+            "name": "reports",
+            "type": "reports",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "resources",
+            "type": "resources",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        }
+    ],
+    "ricardian_clauses": [
+        {
+            "id": "Data Storage",
+            "body": "---\r\nspec-version: 0.0.1\r\ntitle: General Data Storage\r\nsummary: This smart contract will store data added by the user. The user consents to the storage of this data by signing the transaction.\r\nicon:"
+        },
+        {
+            "id": "Data Usage",
+            "body": "---\r\nspec-version: 0.0.1\r\ntitle: General Data Use\r\nsummary: This smart contract will store user data. The smart contract will not use the stored data for any purpose outside store and delete.\r\nicon:"
+        },
+        {
+            "id": "Data Ownership",
+            "body": "---\r\nspec-version: 0.0.1\r\ntitle: Data Ownership\r\nsummary: The user of this smart contract verifies that the data is owned by the smart contract, and that the smart contract can use the data in accordance to the terms defined in the Ricardian Contract.\r\nicon:"
+        },
+        {
+            "id": "Data Distirbution",
+            "body": "---\r\nspec-version: 0.0.1\r\ntitle: Data Distirbution\r\nsummary: The smart contract promises to not actively share or distribute the resource data. The user of the smart contract understands that data stored in a multi index table is not private data and can be accessed by any user of the blockchain.  \r\nicon:"
+        },
+        {
+            "id": "Data Future",
+            "body": "---\r\nspec-version: 0.0.1\r\ntitle: Data Future\r\nsummary: The smart contract promises to only use the data in accordance of the terms defined in the Ricardian Contract, now and at all future dates.\r\nicon:"
+        }
+    ],
+    "variants": []
+}

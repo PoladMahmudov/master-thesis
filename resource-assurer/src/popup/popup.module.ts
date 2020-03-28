@@ -8,9 +8,9 @@ import { PopupComponent } from './components/popup.component';
 import { ResourcesComponent } from './components/resources/resources.component';
 import { ResourcePublisherComponent } from './components/resource-publisher/resource-publisher.component';
 import { BrowserStorageHelper } from 'src/lib/storage/browser-storage-helper';
-import { IntegrityContract } from 'src/lib/blockchain/integrity/integrity.contract';
 import { ReportPublisherComponent } from './components/report-publisher/report-publisher.component';
-import { ReliabilityContract } from 'src/lib/blockchain/reliability/reliability.contract';
+import { ResourceManager } from 'src/lib/resource-manager/resource-manager';
+import { AssurerContract } from 'src/lib/blockchain/assurer/assurer.contract';
 
 @NgModule({
   declarations: [
@@ -27,8 +27,8 @@ import { ReliabilityContract } from 'src/lib/blockchain/reliability/reliability.
   ],
   providers: [
     BrowserStorageHelper,
-    IntegrityContract,
-    ReliabilityContract
+    AssurerContract,
+    ResourceManager
   ],
   bootstrap: [PopupComponent]
 })

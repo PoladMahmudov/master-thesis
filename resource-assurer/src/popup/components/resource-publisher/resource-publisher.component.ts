@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Resource } from 'src/lib/storage/resource';
 import { BrowserStorageHelper } from 'src/lib/storage/browser-storage-helper';
-import { ResourceStruct } from 'src/lib/blockchain/integrity/resource.struct';
-import { IntegrityContract } from 'src/lib/blockchain/integrity/integrity.contract';
+import { ResourceStruct } from 'src/lib/blockchain/assurer/resource.struct';
+import { ResourceManager } from 'src/lib/resource-manager/resource-manager';
+import { AssurerContract } from 'src/lib/blockchain/assurer/assurer.contract';
 
 @Component({
   selector: 'popup-resource-publisher',
@@ -18,7 +19,8 @@ export class ResourcePublisherComponent implements OnInit {
     private readonly route: ActivatedRoute,
     private readonly router: Router,
     private readonly storage: BrowserStorageHelper,
-    private readonly blockchain: IntegrityContract
+    private readonly blockchain: AssurerContract,
+    private readonly resourceManager: ResourceManager
   ) {
 
   }
@@ -32,8 +34,11 @@ export class ResourcePublisherComponent implements OnInit {
     return this._struct;
   }
 
-  submitStruct(): void {
+  async submitStruct(): Promise<void> {
+    const tabId = await this.getCurrentTab();
     this.blockchain.publish(this._struct)
+      .then(() => this.resourceManager
+        .retrieveAndStoreResource(tabId, this._struct.hash, this._struct.uri))
       .then(() => this.router.navigate(['/']));
   }
 
