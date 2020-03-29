@@ -5,6 +5,7 @@ export class ReportStruct implements Struct {
     resource_hash: string;
     user: string;
     report_uri: string;
+    title: string;
     description: string;
     verdict: boolean;
 }

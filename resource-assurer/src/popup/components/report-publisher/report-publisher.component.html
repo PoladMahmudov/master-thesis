@@ -9,17 +9,24 @@
                 </div>
             </div>
             <div class="field">
+                <label class="label">Title</label>
+                <div class="control">
+                    <input [(ngModel)]="struct.title" #reportTitle="ngModel" name="reportTitle" class="input"
+                        type="text" placeholder="Title for report" maxlength="1024" required>
+                </div>
+            </div>
+            <div class="field">
                 <label class="label">URI</label>
                 <div class="control">
                     <input [(ngModel)]="struct.report_uri" #reportUri="ngModel" name="reportUri" class="input"
-                        type="text" placeholder="Full report URI" required>
+                        type="text" placeholder="Full report URI" maxlength="2048" required>
                 </div>
             </div>
             <div class="field">
                 <label class="label">Brief description</label>
                 <div class="control">
                     <textarea [(ngModel)]="struct.description" #reportDescription="ngModel" name="reportDescription"
-                        class="textarea" placeholder="Brief description on security verdict" rows="2"
+                        class="textarea" placeholder="Brief description on security verdict" maxlength="4000" rows="2"
                         required></textarea>
                 </div>
             </div>

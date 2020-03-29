@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Resource } from 'src/lib/storage/resource';
-import { BrowserStorageHelper } from 'src/lib/storage/browser-storage-helper';
+import { Resource } from 'src/lib/resource-manager/resource';
+import { ResourceStorageHelper } from 'src/lib/resource-manager/resource-storage-helper';
 import { ResourceStruct } from 'src/lib/blockchain/assurer/resource.struct';
 import { ResourceManager } from 'src/lib/resource-manager/resource-manager';
 import { AssurerContract } from 'src/lib/blockchain/assurer/assurer.contract';
@@ -18,7 +18,7 @@ export class ResourcePublisherComponent implements OnInit {
   constructor(
     private readonly route: ActivatedRoute,
     private readonly router: Router,
-    private readonly storage: BrowserStorageHelper,
+    private readonly storage: ResourceStorageHelper,
     private readonly blockchain: AssurerContract,
     private readonly resourceManager: ResourceManager
   ) { }

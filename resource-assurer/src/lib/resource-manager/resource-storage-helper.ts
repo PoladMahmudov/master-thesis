@@ -1,6 +1,6 @@
 import { Resource } from './resource';
 
-export class BrowserStorageHelper {
+export class ResourceStorageHelper {
 
     /**
      * The browser's storage alias for tabs.
@@ -47,7 +47,7 @@ export class BrowserStorageHelper {
      * @param resHash be stored by tab ID
      */
     private async upsertTabResources(tab: number, resHash: string): Promise<void> {
-        const alias = BrowserStorageHelper.tabAlias(tab);
+        const alias = ResourceStorageHelper.tabAlias(tab);
         return browser.storage.local
             .get(alias) // get by alias from storage
             .then(storage => storage[alias]) // get all associated hashes
@@ -82,7 +82,7 @@ export class BrowserStorageHelper {
      * @returns promise of resource array
      */
     public getByTab(tabId: number): Promise<Resource[]> {
-        const alias = BrowserStorageHelper.tabAlias(tabId);
+        const alias = ResourceStorageHelper.tabAlias(tabId);
         return browser.storage.local
             .get(alias)
             .then(storage => storage[alias]) // get all associated hashes
@@ -113,7 +113,7 @@ export class BrowserStorageHelper {
      * @returns promise of void
      */
     public async deleteByTab(tabId: number): Promise<void> {
-        return browser.storage.local.remove(BrowserStorageHelper.tabAlias(tabId));
+        return browser.storage.local.remove(ResourceStorageHelper.tabAlias(tabId));
     }
 
     /**
@@ -124,7 +124,7 @@ export class BrowserStorageHelper {
      */
     public addChangeListener(tabId: number, callback: (resources: Resource[]) => void): void {
         browser.storage.onChanged.addListener((changes, areaName: string) => {
-            const tabChanges = changes[BrowserStorageHelper.tabAlias(tabId)];
+            const tabChanges = changes[ResourceStorageHelper.tabAlias(tabId)];
             if (tabChanges) {
                 callback(tabChanges.newValue);
             }

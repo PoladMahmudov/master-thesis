@@ -12,7 +12,7 @@ export abstract class BaseContract {
     // private readonly rpcPort = '443';
     private readonly rpcUri = 'http://localhost';
     private readonly rpcPort = '8888';
-    private readonly defaultPrivateKey = '5KdbsD6en43rKfBFbHLbJbj1LeFpHNxg7KaE2nRsJCoFSkuxibr';
+    private readonly defaultPrivateKey = '5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3';
     private readonly user = 'assurer';
 
     protected readonly rpc: JsonRpc;

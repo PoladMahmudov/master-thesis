@@ -1,4 +1,4 @@
-import { Resource } from 'src/lib/storage/resource';
+import { Resource } from 'src/lib/resource-manager/resource';
 import { ResourceManager } from 'src/lib/resource-manager/resource-manager';
 
 export class BackgroundHelper {

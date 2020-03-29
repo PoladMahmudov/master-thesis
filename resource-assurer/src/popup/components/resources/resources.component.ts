@@ -1,9 +1,9 @@
 import { Component, OnInit } from '@angular/core';
-import { Resource } from 'src/lib/storage/resource';
-import { BrowserStorageHelper } from 'src/lib/storage/browser-storage-helper';
-import { ResourceStateType } from 'src/lib/storage/resource-state.type';
+import { Resource } from 'src/lib/resource-manager/resource';
+import { ResourceStorageHelper } from 'src/lib/resource-manager/resource-storage-helper';
+import { ResourceStateType } from 'src/lib/resource-manager/resource-state.type';
 import { faLink, faThumbsUp, faThumbsDown } from '@fortawesome/free-solid-svg-icons'
-import { Report } from 'src/lib/storage/report';
+import { Report } from 'src/lib/resource-manager/report';
 
 @Component({
   selector: 'popup-resources',
@@ -19,7 +19,7 @@ export class ResourcesComponent implements OnInit {
 
   private _resources: Resource[] = [];
 
-  constructor(private readonly storage: BrowserStorageHelper) {
+  constructor(private readonly storage: ResourceStorageHelper) {
   }
 
   get resources(): Resource[] {

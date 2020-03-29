@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BrowserStorageHelper } from 'src/lib/storage/browser-storage-helper';
-import { Resource } from 'src/lib/storage/resource';
+import { ResourceStorageHelper } from 'src/lib/resource-manager/resource-storage-helper';
+import { Resource } from 'src/lib/resource-manager/resource';
 import { ReportStruct } from 'src/lib/blockchain/assurer/report.struct';
 import { AssurerContract } from 'src/lib/blockchain/assurer/assurer.contract';
 import { ResourceManager } from 'src/lib/resource-manager/resource-manager';
@@ -18,7 +18,7 @@ export class ReportPublisherComponent implements OnInit {
   constructor(
     private readonly route: ActivatedRoute,
     private readonly router: Router,
-    private readonly storage: BrowserStorageHelper,
+    private readonly storage: ResourceStorageHelper,
     private readonly blockchain: AssurerContract,
     private readonly resourceManager: ResourceManager
   ) { }
@@ -47,6 +47,7 @@ export class ReportPublisherComponent implements OnInit {
     const struct = new ReportStruct();
     struct.resource_hash = resource.resourceHash;
     struct.report_uri = undefined;
+    struct.title = undefined;
     struct.description = undefined;
     struct.verdict = undefined;
     this._struct = struct;

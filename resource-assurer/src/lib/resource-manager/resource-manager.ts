@@ -1,15 +1,15 @@
-import { Resource } from '../storage/resource';
+import { Resource } from './resource';
 import { ResourceStruct } from '../blockchain/assurer/resource.struct';
 import { ReportStruct } from '../blockchain/assurer/report.struct';
-import { ResourceStateType } from '../storage/resource-state.type';
-import { Report } from '../storage/report';
-import { BrowserStorageHelper } from '../storage/browser-storage-helper';
+import { ResourceStateType } from './resource-state.type';
+import { Report } from './report';
+import { ResourceStorageHelper } from './resource-storage-helper';
 import { AssurerContract } from '../blockchain/assurer/assurer.contract';
 
 export class ResourceManager {
 
     private readonly assurerContract = new AssurerContract();
-    private readonly storage = new BrowserStorageHelper();
+    private readonly storage = new ResourceStorageHelper();
 
     /**
      * Refreshes resource by retrieving resource and its reports from blockchain.
@@ -94,6 +94,7 @@ export class ResourceManager {
         return structs.map(struct => ({
             owner: struct.user,
             reportUri: struct.report_uri,
+            title: struct.title,
             description: struct.description,
             verdict: struct.verdict
         }));
