@@ -4,15 +4,17 @@
 // progress bar
 $progress-bar-background-color: $red; // doesn't work
 $progress-value-background-color: $green;
-$progress-border-radius: $radius;
+$progress-border-radius: unset;
 
 // section
-$section-padding: .5rem;
-$section-padding-medium: .5rem;
-$section-padding-large: .5rem;
+$section-padding: .5em 0;
+$section-padding-medium: .5em 0;
+$section-padding-large: .5em 0;
 
 // box
 $box-padding: .2em .5em;
+$box-radius: unset;
+$box-shadow: unset;
 
 // navbar
 $navbar-height: 2.80rem;

@@ -31,19 +31,6 @@ export class ResourcesComponent implements OnInit {
     this.startStorageListener();
   }
 
-  public resolveTagColor(value: ResourceStateType): string {
-    switch (value) {
-      case ResourceStateType.PUBLISHED:
-        return 'is-dark';
-      case ResourceStateType.REPORTED:
-        return 'is-primary';
-      case ResourceStateType.UNPUBLISHED:
-        return 'is-warning'
-      default:
-        return 'is-light';
-    }
-  }
-
   public retrieveFileName(uri: string): string {
     const regex = /\/([^\/]*\.js)/gm;
     const subs = uri.match(regex);

@@ -34,7 +34,7 @@ export class ReportPublisherComponent implements OnInit {
 
   submitStruct(): void {
     this.blockchain.post(this._struct)
-    .then(() => this.resourceManager.refreshResource(this._struct.resource_hash))
+      .then(() => this.resourceManager.refreshResource(this._struct.resource_hash))
       .then(() => this.router.navigate(['/']));
   }
 

@@ -3,32 +3,48 @@
 }
 
 .box {
-    margin: 1em 0;
+    margin: .5em 0;
 }
 
 .resource-name {
     word-break: break-all;
     max-width: 20em;
-    max-height: 5em;
-    overflow-y: hidden;
 }
 
 .resource-tags {
     display: flex;
     align-items: center;
-    .icon {
-        margin: 0 .1em;
-    }
+
     span.tag-elem {
         margin-right: .5em;
-        &.progress-wrapper {
-            display: flex;
-            align-items: center;
-            margin: unset;
-        }
     }
-    progress.progress {
-        display: inline-block;
-        max-width: 5em;
+}
+
+.progress-wrapper {
+    margin-top: unset;
+}
+
+.buttons-and-progress-tags-wrapper {
+    display: flex;
+
+    .buttons {
+        display: flex;
+        margin-bottom: unset;
+        margin-top: .4em;
+        width: 70%;
+    }
+
+    .progress-tags {
+        display: flex;
+        justify-content: flex-end;
+        align-items: flex-end;
+        width: 30%;
+        .tag {
+            margin-right: .5em;
+            margin-bottom: .5em;
+        }
+        .tag:last-child {
+            margin-right: unset;
+        }
     }
 }

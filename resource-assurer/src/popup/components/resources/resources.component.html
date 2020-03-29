@@ -1,52 +1,61 @@
 <div class="section">
     <ng-container *ngFor="let resource of resources">
-        <div class="columns">
-            <div class="box">
-                <div class="column is-full">
-                    <div class="label resource-name">
-                        <span>{{retrieveFileName(resource.resourceUrl)}}</span>
-                        <span *ngIf="resource.resourceRepoUrl">
-                            <a class="icon" [attr.href]="resource.resourceRepoUrl">
-                                <fa-icon [icon]="faLink"></fa-icon>
-                            </a>
-                        </span>
-                    </div>
-                    <div class="resource-tags">
-                        <span class="tag tag-elem" [ngClass]="resolveTagColor(resource.state)">
-                            #{{resource.state | lowercase}}
-                        </span>
-                        <ng-container *ngIf="resource.state !== state.UNPUBLISHED">
-                            <span class="tag tag-elem is-italic">
-                                @{{resource.owner}}
-                            </span>
-                        </ng-container>
-                        <ng-container *ngIf="resource.reports.length > 0">
-                            <fa-icon class="icon has-text-success is-small" [icon]="faThumbsUp"></fa-icon>
-                            <span class="tag-elem progress-wrapper">
-                                <progress class="progress is-medium" [value]="countReliabilityRate(resource.reports)"
-                                    max="100"></progress>
-                            </span>
-                            <fa-icon class="icon has-text-danger is-small" [icon]="faThumbsDown"></fa-icon>
-                        </ng-container>
-                    </div>
-                </div>
-                <div class="column is-full">
-                    <div class="buttons">
-                        <ng-container *ngIf="resource.state === state.UNPUBLISHED">
-                            <a [routerLink]="['/resources/' + resource.resourceHash + '/publisher']"
-                                class="button is-small is-primary">
-                                Publish
-                            </a>
-                        </ng-container>
-                        <ng-container *ngIf="resource.state !== state.UNPUBLISHED">
-                            <a [routerLink]="['/resources/' + resource.resourceHash + '/reports/publisher']"
-                                class="button is-small is-link">
-                                Report
-                            </a>
-                        </ng-container>
-                    </div>
-                </div>
+        <div class="box">
+            <div class="label resource-name">
+                <span>{{retrieveFileName(resource.resourceUrl)}}</span>
+                <span *ngIf="resource.resourceRepoUrl">
+                    <a class="icon" [attr.href]="resource.resourceRepoUrl">
+                        <fa-icon [icon]="faLink"></fa-icon>
+                    </a>
+                </span>
             </div>
+            <div class="resource-tags">
+                <ng-container *ngIf="resource.state === state.REPORTED">
+                    <span class="tag-elem is-italic is-size-7 has-text-grey-dark">
+                        #published
+                    </span>
+                </ng-container>
+                <span class="tag-elem is-italic is-size-7 has-text-grey-dark">
+                    #{{resource.state | lowercase}}
+                </span>
+                <ng-container *ngIf="resource.state !== state.UNPUBLISHED">
+                    <span class="tag-elem is-italic is-size-7 has-text-primary">
+                        @{{resource.owner}}
+                    </span>
+                </ng-container>
+            </div>
+            <div class="buttons-and-progress-tags-wrapper">
+                <div class="buttons">
+                    <ng-container *ngIf="resource.state === state.UNPUBLISHED; else reportButton">
+                        <a [routerLink]="['/resources/' + resource.resourceHash + '/publisher']"
+                            class="button is-small is-primary">
+                            Publish
+                        </a>
+                    </ng-container>
+                    <ng-template #reportButton>
+                        <a [routerLink]="['/resources/' + resource.resourceHash + '/reports/publisher']"
+                            class="button is-small is-link">
+                            Report
+                        </a>
+                    </ng-template>
+                </div>
+                <ng-container *ngIf="resource.reports.length > 0">
+                    <div class="progress-tags">
+                        <span class="tag is-success is-light">
+                            {{countReliabilityRate(resource.reports)}}%
+                        </span>
+                        <span class="tag is-danger is-light">
+                            {{100 - countReliabilityRate(resource.reports)}}%
+                        </span>
+                    </div>
+                </ng-container>
+            </div>
+            <ng-container *ngIf="resource.reports.length > 0">
+                <div class="progress-wrapper">
+                    <progress class="progress is-small" [value]="countReliabilityRate(resource.reports)"
+                        max="100"></progress>
+                </div>
+            </ng-container>
         </div>
     </ng-container>
 </div>

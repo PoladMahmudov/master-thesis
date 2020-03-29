@@ -1,5 +1,4 @@
 import { BackgroundHelper } from './background-helper';
-import { BrowserStorageHelper } from 'src/lib/storage/browser-storage-helper';
 
 const helper = new BackgroundHelper();
 
