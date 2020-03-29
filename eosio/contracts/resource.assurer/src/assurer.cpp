@@ -45,7 +45,7 @@ ACTION assurer::publish(const checksum256 hash, const name user, const string& u
 /**
  *  Report post action
  */
-ACTION assurer::post(const checksum256 resource_hash, const name user, const string& report_uri, const string& description, const bool& verdict) {
+ACTION assurer::post(const checksum256 resource_hash, const name user, const string& report_uri, const string& title, const string& description, const bool& verdict) {
   // asserts that the account executing
   // the transaction equals the provided value
   require_auth(user);
@@ -60,6 +60,10 @@ ACTION assurer::post(const checksum256 resource_hash, const name user, const str
   // Check report URI
   check(!report_uri.empty(), "Report URI must be defined");
   check(report_uri.size() <= 2048, "Report URI must be less than 2048 characters");
+
+  // Check title
+  check(!title.empty(), "Title of a report must be given");
+  check(title.size() <= 1024, "Title of a report must be less than 1024 characters");
 
   // Check description
   check(!description.empty(), "Brief description of a report must be given");
@@ -81,6 +85,7 @@ ACTION assurer::post(const checksum256 resource_hash, const name user, const str
       row.resource_hash = resource_hash;
       row.user          = user;
       row.report_uri    = report_uri;
+      row.title         = title;
       row.description   = description;
       row.verdict       = verdict;
   });

@@ -1,0 +1,21 @@
+{
+  "main": "src\\forum.cpp",
+  "contract": "forum",
+  "include": "",
+  "resource": "resources",
+  "cdt": "v1.7.0",
+  "output": "",
+  "scripts": {
+    "build": ""
+  },
+  "deploy": {
+    "target": "both",
+    "mainnet": "",
+    "kylin": "",
+    "jungle": "",
+    "local": ""
+  },
+  "test": {
+    "npmClient": ""
+  }
+}

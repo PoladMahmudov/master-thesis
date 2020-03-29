@@ -25,6 +25,7 @@ CONTRACT assurer : public contract {
       const checksum256 resource_hash, 
       const name user, 
       const string& report_uri, 
+      const string& title,
       const string& description, 
       const bool& verdict
     );
@@ -46,6 +47,7 @@ CONTRACT assurer : public contract {
       checksum256 resource_hash; // use secondary multi_index with eosio::checksum256
       name        user;
       string      report_uri;
+      string      title;
       string      description;
       bool        verdict; // final verdict
 
