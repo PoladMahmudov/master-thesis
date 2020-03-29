@@ -41,20 +41,26 @@
                 </div>
                 <ng-container *ngIf="resource.reports.length > 0">
                     <div class="progress-tags">
-                        <span class="tag is-success is-light">
-                            {{countReliabilityRate(resource.reports)}}%
-                        </span>
-                        <span class="tag is-danger is-light">
-                            {{100 - countReliabilityRate(resource.reports)}}%
-                        </span>
+                        <a [routerLink]="['/resources/' + resource.resourceHash + '/reports']">
+                            <div class="tags has-addons">
+                                <span class="tag is-success is-light">
+                                    {{countReliabilityRate(resource.reports)}}%
+                                </span>
+                                <span class="tag is-danger is-light">
+                                    {{100 - countReliabilityRate(resource.reports)}}%
+                                </span>
+                            </div>
+                        </a>
                     </div>
                 </ng-container>
             </div>
             <ng-container *ngIf="resource.reports.length > 0">
-                <div class="progress-wrapper">
-                    <progress class="progress is-small" [value]="countReliabilityRate(resource.reports)"
-                        max="100"></progress>
-                </div>
+                <a [routerLink]="['/resources/' + resource.resourceHash + '/reports']">
+                    <div class="progress-wrapper">
+                        <progress class="progress is-small" [value]="countReliabilityRate(resource.reports)"
+                            max="100"></progress>
+                    </div>
+                </a>
             </ng-container>
         </div>
     </ng-container>

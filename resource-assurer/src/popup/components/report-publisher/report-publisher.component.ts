@@ -38,7 +38,7 @@ export class ReportPublisherComponent implements OnInit {
       .then(() => this.router.navigate(['/']));
   }
 
-  private async getResource(hash: string) {
+  private getResource(hash: string) {
     this.storage.getByHash(hash)
       .then(res => this.initStruct(res));
   }

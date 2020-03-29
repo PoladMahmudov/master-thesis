@@ -22,14 +22,18 @@ $navbar-height: 2.80rem;
 /* Rest of Bulma */
 @import "~bulma/bulma.sass";
 
-/* Brute overrides */
-.progress {
-    background-color: $red;
-}
-
 html,
 body {
     overflow: unset;
     max-height: 489px;
     width: 350px;
+}
+
+.section {
+    background-color: whitesmoke;
+}
+
+/* Brute overrides */
+.progress {
+    background-color: $red;
 }

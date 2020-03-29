@@ -11,13 +11,15 @@ import { ResourceStorageHelper } from 'src/lib/resource-manager/resource-storage
 import { ReportPublisherComponent } from './components/report-publisher/report-publisher.component';
 import { ResourceManager } from 'src/lib/resource-manager/resource-manager';
 import { AssurerContract } from 'src/lib/blockchain/assurer/assurer.contract';
+import { ReportsComponent } from './components/reports/reports.component';
 
 @NgModule({
   declarations: [
     PopupComponent,
     ResourcesComponent,
     ResourcePublisherComponent,
-    ReportPublisherComponent
+    ReportPublisherComponent,
+    ReportsComponent
   ],
   imports: [
     BrowserModule,

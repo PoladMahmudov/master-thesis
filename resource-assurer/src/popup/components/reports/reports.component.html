@@ -1,0 +1,23 @@
+<div class="section">
+    <ng-container *ngFor="let report of reports">
+        <div class="box" [class]="report.verdict ? 'secured' : 'unsecured'">
+            <div class="label resource-name">
+                <span>{{report.title}}</span>
+                <span>
+                    <a class="icon" [attr.href]="report.reportUri">
+                        <fa-icon [icon]="faLink"></fa-icon>
+                    </a>
+                </span>
+            </div>
+            <ng-container *ngIf="report.verdict; else insecureTag">
+                <span class="tag is-success is-small is-light">secure</span>
+            </ng-container>
+            <ng-template #insecureTag>
+                <span class="tag is-danger is-small is-light">insecure</span>
+            </ng-template>
+            <div>
+                <p>{{report.description}}</p>
+            </div>
+        </div>
+    </ng-container>
+</div>

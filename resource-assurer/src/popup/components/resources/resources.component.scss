@@ -1,9 +1,5 @@
-.section {
-    background-color: whitesmoke;
-}
-
 .box {
-    margin: .5em 0;
+    margin: .6em 0;
 }
 
 .resource-name {
@@ -40,11 +36,7 @@
         align-items: flex-end;
         width: 30%;
         .tag {
-            margin-right: .5em;
-            margin-bottom: .5em;
-        }
-        .tag:last-child {
-            margin-right: unset;
+            border-radius: unset;
         }
     }
 }
