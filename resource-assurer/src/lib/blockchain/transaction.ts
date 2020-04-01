@@ -1,10 +1,10 @@
-import { Struct } from './struct';
+import { Action } from './action';
 
-export interface Transaction<D extends Struct> {
-    actions: Action<D>[];
+export interface Transaction<A extends Action> {
+    actions: ActionWrapper<A>[];
 }
 
-interface Action<D> {
+interface ActionWrapper<D> {
     account: string,
     name: string,
     authorization: Authorization[],

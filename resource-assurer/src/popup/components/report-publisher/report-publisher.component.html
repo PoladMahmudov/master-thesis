@@ -1,31 +1,31 @@
 <div class="section">
-    <ng-container *ngIf="struct">
-        <form #reliabilityForm="ngForm" (ngSubmit)=submitStruct()>
+    <ng-container *ngIf="action">
+        <form #reliabilityForm="ngForm" (ngSubmit)=submitAction()>
             <div class="field">
                 <label class="label">Resource hash</label>
                 <div class="control">
-                    <input [(ngModel)]="struct.resource_hash" #resourceHash="ngModel" name="resourceHash" class="input"
+                    <input [(ngModel)]="action.resource_hash" #resourceHash="ngModel" name="resourceHash" class="input"
                         type="text" placeholder="Resource file hash-code" disabled required>
                 </div>
             </div>
             <div class="field">
                 <label class="label">Title</label>
                 <div class="control">
-                    <input [(ngModel)]="struct.title" #reportTitle="ngModel" name="reportTitle" class="input"
+                    <input [(ngModel)]="action.title" #reportTitle="ngModel" name="reportTitle" class="input"
                         type="text" placeholder="Title for report" maxlength="1024" required>
                 </div>
             </div>
             <div class="field">
                 <label class="label">URI</label>
                 <div class="control">
-                    <input [(ngModel)]="struct.report_uri" #reportUri="ngModel" name="reportUri" class="input"
+                    <input [(ngModel)]="action.report_uri" #reportUri="ngModel" name="reportUri" class="input"
                         type="text" placeholder="Full report URI" maxlength="2048" required>
                 </div>
             </div>
             <div class="field">
                 <label class="label">Brief description</label>
                 <div class="control">
-                    <textarea [(ngModel)]="struct.description" #reportDescription="ngModel" name="reportDescription"
+                    <textarea [(ngModel)]="action.description" #reportDescription="ngModel" name="reportDescription"
                         class="textarea" placeholder="Brief description on security verdict" maxlength="4000" rows="2"
                         required></textarea>
                 </div>
@@ -34,13 +34,13 @@
                 <label class="label">Verdict</label>
                 <div class="control">
                     <label class="radio">
-                        <input [(ngModel)]="struct.verdict" type="radio" #reportPositiveVerdict="ngModel" name="reportVerdict"
-                            [value]="true" [checked]="struct.verdict">
+                        <input [(ngModel)]="action.verdict" type="radio" #reportPositiveVerdict="ngModel" name="reportVerdict"
+                            [value]="true" [checked]="action.verdict">
                         <span class="has-text-primary has-text-weight-semibold report-verdict-label">Secure</span>
                     </label>
                     <label class="radio">
-                        <input [(ngModel)]="struct.verdict" type="radio" #reportNegativeVerdict="ngModel" name="reportVerdict"
-                            [value]="false" [checked]="struct.verdict">
+                        <input [(ngModel)]="action.verdict" type="radio" #reportNegativeVerdict="ngModel" name="reportVerdict"
+                            [value]="false" [checked]="action.verdict">
                         <span class="has-text-danger has-text-weight-semibold report-verdict-label">Insecure</span>
                     </label>
                 </div>

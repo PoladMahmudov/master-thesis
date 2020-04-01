@@ -4,6 +4,30 @@
     "types": [],
     "structs": [
         {
+            "name": "clean",
+            "base": "",
+            "fields": [
+                {
+                    "name": "report_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "max_count",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
+            "name": "expire",
+            "base": "",
+            "fields": [
+                {
+                    "name": "report_id",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
             "name": "post",
             "base": "",
             "fields": [
@@ -86,6 +110,18 @@
                 {
                     "name": "verdict",
                     "type": "bool"
+                },
+                {
+                    "name": "created_on",
+                    "type": "uint32"
+                },
+                {
+                    "name": "expires_on",
+                    "type": "uint32"
+                },
+                {
+                    "name": "ratio",
+                    "type": "float32"
                 }
             ]
         },
@@ -114,18 +150,96 @@
                     "type": "string"
                 }
             ]
+        },
+        {
+            "name": "unvote",
+            "base": "",
+            "fields": [
+                {
+                    "name": "report_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "voter",
+                    "type": "name"
+                }
+            ]
+        },
+        {
+            "name": "vote",
+            "base": "",
+            "fields": [
+                {
+                    "name": "report_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "voter",
+                    "type": "name"
+                },
+                {
+                    "name": "vote",
+                    "type": "bool"
+                }
+            ]
+        },
+        {
+            "name": "votes",
+            "base": "",
+            "fields": [
+                {
+                    "name": "id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "report_id",
+                    "type": "uint64"
+                },
+                {
+                    "name": "voter",
+                    "type": "name"
+                },
+                {
+                    "name": "vote",
+                    "type": "bool"
+                },
+                {
+                    "name": "updated_at",
+                    "type": "uint32"
+                }
+            ]
         }
     ],
     "actions": [
         {
+            "name": "clean",
+            "type": "clean",
+            "ricardian_contract": "---\r\nspec-version: 0.0.2  \r\ntitle: Clean  \r\nsummary: This action is used to clear the RAM being used to store all information related to report. All associated votes can be cleared from the RAM of reporter.  \r\n---\r\n\r\n## Description\r\n\r\nThis action is used to clear the RAM being used to store all information related to\r\n{{ report_id }}. All associated votes can be cleared from the RAM of {{ user }} - reporter.\r\n\r\nThis action can be called by any user, requiring no authorization.\r\n\r\nThis action can only be called 72 hours after {{ expires_on }} has been reached.\r\n{{ expires_on }} is set at the moment that {{ report_id }} is created, and can\r\nonly be updated by {{ user }}. This will allow time to compute a tally of all\r\nassociated votes before it can be cleared.\r\n\r\nThe user who calls `clean` will pay the CPU and NET bandwidth required\r\nto process the action. They will need to specify `max_count` to ensure that the\r\naction can be processed within a single block's maximum allowable limits."
+        },
+        {
+            "name": "expire",
+            "type": "expire",
+            "ricardian_contract": "---\r\nspec-version: 0.0.2\r\ntitle: Expire\r\nsummary: Expire report by finalyzing its validation.\r\n---\r\n\r\n## Description\r\n\r\n`expire` can only be called by {{ user }} - reporter.\r\n\r\n`expire` is used to modify the value of `expires_on` to the current time at which the action is called.\r\nIt also calculates the final vote ratio `positive / all` and store them inside {{ ratio }} of a report.  \r\nOnce `expire` has been called, no more `vote` actions will be accepted for {{ report_id }}. \r\nVotes can be cleared from RAM 72 hours after {{ user }} has called the `expire` action."
+        },
+        {
             "name": "post",
             "type": "post",
-            "ricardian_contract": "---\r\nspec-version: 0.0.2\r\ntitle: Post\r\nsummary: This action will post a new audit report on web resource entry to reports table. Hash of the resource, full report URI, brief description of the report and final verdict on security level must be provided.\r\nicon:"
+            "ricardian_contract": "---\r\nspec-version: 0.0.2\r\ntitle: Post\r\nsummary: This action will post a new audit report on web resource entry to reports table. Hash of the resource, full report URI, brief description of the report and final verdict on security level must be provided.\r\n---\r\n\r\n## Description\r\n\r\n`post` creates a report on-chain with the intention of receiving\r\nvotes from any community members who wish to cast a `vote`.\r\n\r\nEach report shall be identified with a unique `report_id`.\r\n\r\nAn expiry will be defined in `expires_on`, with {{ expires_on }}\r\nbeing no later than 3 months in the future.\r\n\r\n{{ user }} - reporter must pay for the RAM to store votes, which\r\nwill be returned to them once `clean` has been called."
         },
         {
             "name": "publish",
             "type": "publish",
-            "ricardian_contract": "---\r\nspec-version: 0.0.2\r\ntitle: Publish\r\nsummary: This action will publish new web resource entry to resources table. Hash of the resource, server URI and version control repository URI must be provided.\r\nicon:"
+            "ricardian_contract": "---\r\nspec-version: 0.0.2\r\ntitle: Publish\r\nsummary: This action will publish new web resource entry to resources table. Hash of the resource, server URI and version control repository URI must be provided.\r\n---"
+        },
+        {
+            "name": "unvote",
+            "type": "unvote",
+            "ricardian_contract": "---\r\nspec-version: 0.0.2\r\ntitle: Unvote\r\nsummary: Unvote the report, which was previously voted.\r\n---\r\n\r\n## Description\r\n\r\n`unvote` allows a user to remove their vote of {{ vote }} they have previously\r\ncast on {{ report_id }}.\r\n\r\n`unvote` will not function during the 72 hour period after\r\n{{ report_id }} has expired at {{ expires_on }}.\r\n\r\nThe RAM that was used to store the vote shall be freed-up immediately\r\nafter `unvote` has been called by {{ voter }}."
+        },
+        {
+            "name": "vote",
+            "type": "vote",
+            "ricardian_contract": "---\r\nspec-version: 0.0.2\r\ntitle: Vote\r\nsummary: Vote for the report while it hasn't expired.\r\n---\r\n\r\n## Description\r\nThe {{ voter }}s can cast a vote of {{ vote }} on {{ report_id }}. To change the vote, they may call another `vote` action, with only the most recent `vote` of {{ vote }} value being the `vote`, which {{ voter }} intend to be considered as valid. They acknowledge that using the `unvote` action after placing a `vote` will render the previous `vote` of {{ vote_value }} null and void. \r\nIf {{ voter }}s, they are not the beneficial owner of these tokens, they stipulate that they have proof that they’ve been authorized to vote these tokens by their beneficial owner(s)."
         }
     ],
     "tables": [
@@ -139,6 +253,13 @@
         {
             "name": "resources",
             "type": "resources",
+            "index_type": "i64",
+            "key_names": [],
+            "key_types": []
+        },
+        {
+            "name": "votes",
+            "type": "votes",
             "index_type": "i64",
             "key_names": [],
             "key_types": []

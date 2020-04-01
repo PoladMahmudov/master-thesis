@@ -8,9 +8,9 @@ export class AssurerRequest {
     key_type = 'sha256';
     index_position = 2;
 
-    constructor(resourceHash: string, table: string) {
-        this.upper_bound = resourceHash;
-        this.lower_bound = resourceHash;
+    constructor(by: string, table: string) {
+        this.upper_bound = by;
+        this.lower_bound = by;
         this.table = table;
     }
 }

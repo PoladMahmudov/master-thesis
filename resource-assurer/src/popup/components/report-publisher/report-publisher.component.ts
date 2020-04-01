@@ -5,6 +5,7 @@ import { Resource } from 'src/lib/resource-manager/resource';
 import { ReportStruct } from 'src/lib/blockchain/assurer/report.struct';
 import { AssurerContract } from 'src/lib/blockchain/assurer/assurer.contract';
 import { ResourceManager } from 'src/lib/resource-manager/resource-manager';
+import { PostAction } from 'src/lib/blockchain/assurer/post.action';
 
 @Component({
   selector: 'popup-report-publisher',
@@ -13,7 +14,7 @@ import { ResourceManager } from 'src/lib/resource-manager/resource-manager';
 })
 export class ReportPublisherComponent implements OnInit {
 
-  private _struct: ReportStruct;
+  private _action: PostAction;
 
   constructor(
     private readonly route: ActivatedRoute,
@@ -28,28 +29,28 @@ export class ReportPublisherComponent implements OnInit {
       .subscribe(params => this.getResource(params['hash']));
   }
 
-  get struct(): ReportStruct {
-    return this._struct;
+  get action(): PostAction {
+    return this._action;
   }
 
-  submitStruct(): void {
-    this.blockchain.post(this._struct)
-      .then(() => this.resourceManager.refreshResource(this._struct.resource_hash))
+  submitAction(): void {
+    this.blockchain.post(this._action)
+      .then(() => this.resourceManager.refreshResource(this._action.resource_hash))
       .then(() => this.router.navigate(['/']));
   }
 
   private getResource(hash: string) {
     this.storage.getByHash(hash)
-      .then(res => this.initStruct(res));
+      .then(res => this.initAction(res));
   }
 
-  private initStruct(resource: Resource): void {
-    const struct = new ReportStruct();
-    struct.resource_hash = resource.resourceHash;
-    struct.report_uri = undefined;
-    struct.title = undefined;
-    struct.description = undefined;
-    struct.verdict = undefined;
-    this._struct = struct;
+  private initAction(resource: Resource): void {
+    const action = new PostAction();
+    action.resource_hash = resource.resourceHash;
+    action.report_uri = undefined;
+    action.title = undefined;
+    action.description = undefined;
+    action.verdict = undefined;
+    this._action = action;
   }
 }

@@ -2,7 +2,7 @@ import { Api, JsonRpc, RpcError } from 'eosjs';
 import { JsSignatureProvider } from 'eosjs/dist/eosjs-jssig';
 import { Transaction } from './transaction';
 import { Struct } from './struct';
-import { TableResponse } from './table-response';
+import { Action } from './action';
 
 /** Base class for all contracts' manipulations */
 export abstract class BaseContract {
@@ -31,12 +31,12 @@ export abstract class BaseContract {
     }
 
     /**
-     * Commits transaction with struct
+     * Commits transaction
      * @param action name of the action
-     * @param struct is a raw contract structure
+     * @param payload is a raw contract action payload
      */
-    protected async transact<S extends Struct>(action: string, struct: S): Promise<void> {
-        const transaction = this.createTransaction(action, struct);
+    protected async transact<A extends Action>(action: A): Promise<void> {
+        const transaction = this.createTransaction(action);
         try {
             const result = await this.api.transact(
                 transaction,
@@ -54,18 +54,19 @@ export abstract class BaseContract {
 
     /**
      * Creates transaction object for contract action
-     * @param data payload of a transaction 
+     * @param action payload of a transaction 
      */
-    private createTransaction<S extends Struct>(action: string, data: S): Transaction<S> {
+    private createTransaction<A extends Action>(action: A): Transaction<A> {
         return {
             actions: [{
-                account: this.account,  
-                name: action,
+                account: this.account,
+                name: action.getActionName(),
                 authorization: [{
                     actor: this.user,
                     permission: 'active',
                 }],
-                data: { ...data, user: this.user },
+                // TODO: add user/voter to action before, fetch it from sore!
+                data: { ...action, user: this.user, voter: this.user },
             }]
         }
     }

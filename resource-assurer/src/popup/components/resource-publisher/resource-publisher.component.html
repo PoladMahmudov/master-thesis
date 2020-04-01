@@ -1,24 +1,24 @@
 <div class="section">
-    <ng-container *ngIf="struct">
-        <form #integrityForm="ngForm" (ngSubmit)=submitStruct()>
+    <ng-container *ngIf="action">
+        <form #integrityForm="ngForm" (ngSubmit)=submitAction()>
             <div class="field">
                 <label class="label">Hash</label>
                 <div class="control">
-                    <input [(ngModel)]="struct.hash" #resourceHash="ngModel" name="resourceHash" class="input"
+                    <input [(ngModel)]="action.hash" #resourceHash="ngModel" name="resourceHash" class="input"
                         type="text" placeholder="File hash-code" disabled required>
                 </div>
             </div>
             <div class="field">
                 <label class="label">URI</label>
                 <div class="control">
-                    <input [(ngModel)]="struct.uri" #resourceUri="ngModel" name="resourceUri" class="input" type="text"
+                    <input [(ngModel)]="action.uri" #resourceUri="ngModel" name="resourceUri" class="input" type="text"
                         placeholder="Host server URI (download URI)" disabled required>
                 </div>
             </div>
             <div class="field">
                 <label class="label">Repo URI</label>
                 <div class="control">
-                    <input [(ngModel)]="struct.repo_uri" #resourceRepoUri="ngModel" name="resourceRepoUri" class="input"
+                    <input [(ngModel)]="action.repo_uri" #resourceRepoUri="ngModel" name="resourceRepoUri" class="input"
                         type="text" placeholder="Repository URI of source code" maxlength="2048" required>
                 </div>
             </div>

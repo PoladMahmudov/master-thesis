@@ -1,3 +1,5 @@
 export interface Struct {
-    id?: number;
+    id: number;
+
+    getTableName: () => string;
 }
