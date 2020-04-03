@@ -1,23 +1,46 @@
 <div class="section">
     <ng-container *ngFor="let report of reports">
-        <div class="box" [class]="report.verdict ? 'secured' : 'unsecured'">
-            <div class="label resource-name">
-                <span>{{report.title}}</span>
-                <span>
-                    <a class="icon" [attr.href]="report.reportUri">
-                        <fa-icon [icon]="faLink"></fa-icon>
-                    </a>
+        <div class="card">
+            <div class="card-header">
+                <div class="card-header-title">
+                    <span>{{report.title}}</span>
+                    <span>
+                        <a class="icon" [attr.href]="report.reportUri">
+                            <fa-icon [icon]="faLink"></fa-icon>
+                        </a>
+                    </span>
+                </div>
+                <div class="report-verdict card-header-icon">
+                    <ng-container *ngIf="report.verdict; else insecureTag">
+                        <span class="tag is-success is-small is-light">secure</span>
+                    </ng-container>
+                    <ng-template #insecureTag>
+                        <span class="tag is-danger is-small is-light">insecure</span>
+                    </ng-template>
+                </div>
+            </div>
+            <div class="card-content">
+                <div class="content">
+                    <p>{{report.description}}</p>
+                </div>
+                <span class="is-italic is-size-7 has-text-primary">
+                    @{{report.owner}}
                 </span>
             </div>
-            <ng-container *ngIf="report.verdict; else insecureTag">
-                <span class="tag is-success is-small is-light">secure</span>
-            </ng-container>
-            <ng-template #insecureTag>
-                <span class="tag is-danger is-small is-light">insecure</span>
-            </ng-template>
-            <div>
-                <p>{{report.description}}</p>
-            </div>
+            <footer class="card-footer">
+                <button class="button is-small is-success is-outlined card-footer-item">
+                    <span class="icon is-small">
+                        <fa-icon [icon]="faPlus"></fa-icon>
+                    </span>
+                    <span>12</span>
+                </button>
+                <button class="button is-danger is-outlined is-small card-footer-item">
+                    <span class="icon is-small">
+                        <fa-icon [icon]="faMinus"></fa-icon>
+                    </span>
+                    <span>66</span>
+                </button>
+            </footer>
         </div>
     </ng-container>
 </div>

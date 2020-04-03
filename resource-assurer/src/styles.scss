@@ -19,9 +19,17 @@ $box-shadow: unset;
 // navbar
 $navbar-height: 2.80rem;
 
+// card
+$card-shadow: unset;
+$card-header-shadow: unset;
+$card-header-padding: 0.3em .5rem;
+$card-content-padding: .5em;
+$card-footer-padding: unset;
+
 /* Rest of Bulma */
 @import "~bulma/bulma.sass";
 
+/* Brute overrides */
 html,
 body {
     overflow: unset;
@@ -33,7 +41,6 @@ body {
     background-color: whitesmoke;
 }
 
-/* Brute overrides */
 .progress {
     background-color: $red;
 }

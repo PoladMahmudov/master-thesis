@@ -12,6 +12,7 @@ import { ReportPublisherComponent } from './components/report-publisher/report-p
 import { ResourceManager } from 'src/lib/resource-manager/resource-manager';
 import { AssurerContract } from 'src/lib/blockchain/assurer/assurer.contract';
 import { ReportsComponent } from './components/reports/reports.component';
+import { AccountStorageHelper } from 'src/lib/blockchain/configuration/account-storage-helper';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { ReportsComponent } from './components/reports/reports.component';
   providers: [
     ResourceStorageHelper,
     AssurerContract,
-    ResourceManager
+    ResourceManager,
+    AccountStorageHelper
   ],
   bootstrap: [PopupComponent]
 })

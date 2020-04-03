@@ -44,7 +44,7 @@ export class ResourcesComponent implements OnInit {
       return 0;
     }
     const reliable = reports.reduce((acc, current) => acc + (current.verdict ? 1 : 0), 0);
-    return reliable / reports.length * 100;
+    return +(reliable / reports.length * 100).toFixed(2);
   }
 
   private async initResources(): Promise<void> {

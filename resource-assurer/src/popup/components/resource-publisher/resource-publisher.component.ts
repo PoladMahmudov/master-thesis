@@ -5,6 +5,7 @@ import { ResourceStorageHelper } from 'src/lib/resource-manager/resource-storage
 import { ResourceManager } from 'src/lib/resource-manager/resource-manager';
 import { AssurerContract } from 'src/lib/blockchain/assurer/assurer.contract';
 import { PublishAction } from 'src/lib/blockchain/assurer/publish.action';
+import { AccountStorageHelper } from 'src/lib/blockchain/configuration/account-storage-helper';
 
 @Component({
   selector: 'popup-resource-publisher',
@@ -20,7 +21,8 @@ export class ResourcePublisherComponent implements OnInit {
     private readonly router: Router,
     private readonly storage: ResourceStorageHelper,
     private readonly blockchain: AssurerContract,
-    private readonly resourceManager: ResourceManager
+    private readonly resourceManager: ResourceManager,
+    private readonly accountHelper: AccountStorageHelper
   ) { }
 
   ngOnInit(): void {
@@ -38,16 +40,17 @@ export class ResourcePublisherComponent implements OnInit {
       .then(() => this.router.navigate(['/']));
   }
 
-  private async getResource(hash: string) {
+  private async getResource(hash: string): Promise<void> {
     this.storage.getByHash(hash)
       .then(res => this.initAction(res));
   }
 
-  private initAction(resource: Resource): void {
+  private async initAction(resource: Resource): Promise<void> {
     const action = new PublishAction();
     action.hash = resource.resourceHash;
     action.repo_uri = undefined;
     action.uri = resource.resourceUrl;
+    action.user = await this.accountHelper.getCurrentName();
     this._action = action;
   }
 }

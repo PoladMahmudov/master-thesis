@@ -25,7 +25,8 @@ export class AssurerContract extends BaseContract {
      * @returns rows array with either empty or single resource value
      */
     public async findResource(resourceHash: string): Promise<TableResponse<ResourceStruct>> {
-        return await this.rpc.get_table_rows(
+        const rpc = await this.configuration.getRpc();
+        return await rpc.get_table_rows(
             new AssurerRequest(resourceHash, ResourceStruct.TABLE_NAME));
     }
 
@@ -35,7 +36,8 @@ export class AssurerContract extends BaseContract {
      * @returns rows array with either empty or reports value
      */
     public async findReports(resourceHash: string): Promise<TableResponse<ReportStruct>> {
-        return await this.rpc.get_table_rows(
+        const rpc = await this.configuration.getRpc();
+        return await rpc.get_table_rows(
             new AssurerRequest(resourceHash, ReportStruct.TABLE_NAME));
     }
 
@@ -45,7 +47,8 @@ export class AssurerContract extends BaseContract {
      * @returns rows array with either empty or vote values
      */
     public async findVotes(reportId: number): Promise<TableResponse<VoteStruct>> {
-        return await this.rpc.get_table_rows(
+        const rpc = await this.configuration.getRpc();
+        return await rpc.get_table_rows(
             new AssurerRequest('' + reportId, VoteStruct.TABLE_NAME));
     }
 
@@ -109,7 +112,7 @@ export class AssurerContract extends BaseContract {
 
     private validate(o: any): void {
         Object.entries(o).forEach(field => {
-            if (!field[1]) {
+            if (field[1] == null) {
                 const msg = `${field[0]} is null`;
                 console.error("Validation error: " + msg);
                 throw msg;

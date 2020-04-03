@@ -5,7 +5,7 @@
     "postinstall": "node ./patch.js",
     "ng": "ng",
     "start": "ng build --watch --configuration=dev",
-    "build": "ng build",
+    "build": "ng build --configuration=production",
     "lint": "ng lint"
   },
   "private": true,

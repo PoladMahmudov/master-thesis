@@ -1,3 +1,13 @@
-.box {
-    margin: .6em 0;
+.card {
+    margin-bottom: .75em;
+    &:last-child {
+        margin-bottom: unset;
+    }
+    .button {
+        border-radius: unset;
+        border: unset;
+    }
+    .card-content  .content {
+        margin-bottom: .5em;
+    }
 }

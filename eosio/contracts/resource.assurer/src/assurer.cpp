@@ -210,7 +210,11 @@ float assurer::calc_ratio(votes_index& vote_table, const uint64_t& report_id) {
     lower_itr++;
   }
 
-  return positives / (positives + negatives);
+  if (positives == 0 && negatives == 0) {
+    return 0.0f;
+  }
+
+  return ((float) positives) / (positives + negatives);
 }
 
 EOSIO_DISPATCH(assurer, (publish)(post))

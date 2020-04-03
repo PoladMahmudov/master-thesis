@@ -5,6 +5,8 @@ import { ResourceStateType } from './resource-state.type';
 import { Report } from './report';
 import { ResourceStorageHelper } from './resource-storage-helper';
 import { AssurerContract } from '../blockchain/assurer/assurer.contract';
+import { VoteStruct } from '../blockchain/assurer/vote.struct';
+import { Vote } from './vote';
 
 export class ResourceManager {
 
@@ -48,11 +50,28 @@ export class ResourceManager {
      */
     public async getResource(tabId: number, hash: string, uri: string): Promise<Resource> {
         const resource = await this.getResourceStruct(hash);
-        if(!resource) {
+        if (!resource) {
             return this.buildUnpublishedResource(tabId, hash, uri);
         }
         const reports = await this.getReportStructs(hash);
         return this.buildResource(tabId, resource, reports);
+    }
+
+    /**
+     * Adds all votes to given report.
+     * This method should be called separately per
+     * each group of reports under single resource.
+     * 
+     * @param reports 
+     */
+    public async addVotes(reports: Report[]): Promise<void> {
+        reports.forEach(async report =>
+            report.votes = this.buildVotes(await this.getVoteStructs(report.id))
+        );
+    }
+
+    public async vote(resourceId: number): Promise<void> {
+
     }
 
     private async getResourceStruct(shaCode: string): Promise<ResourceStruct | undefined> {
@@ -62,6 +81,11 @@ export class ResourceManager {
 
     private async getReportStructs(shaCode: string): Promise<ReportStruct[]> {
         const response = await this.assurerContract.findReports(shaCode);
+        return response.rows;
+    }
+
+    private async getVoteStructs(reportId: number): Promise<VoteStruct[]> {
+        const response = await this.assurerContract.findVotes(reportId);
         return response.rows;
     }
 
@@ -78,6 +102,13 @@ export class ResourceManager {
         };
     }
 
+    private buildVotes(structs: VoteStruct[]): Vote[] {
+        return structs.map(s => ({
+            voter: s.voter,
+            vote: s.vote
+        }));
+    }
+
     private buildUnpublishedResource(tabId: number, hash: string, uri: string): Resource {
         return {
             tabId: tabId,
@@ -92,11 +123,13 @@ export class ResourceManager {
 
     private buildReports(structs: ReportStruct[]): Report[] {
         return structs.map(struct => ({
+            id: struct.id,
             owner: struct.user,
             reportUri: struct.report_uri,
             title: struct.title,
             description: struct.description,
-            verdict: struct.verdict
+            verdict: struct.verdict,
+            votes: []
         }));
     }
 }
