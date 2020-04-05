@@ -27,7 +27,7 @@ export class AssurerContract extends BaseContract {
     public async findResource(resourceHash: string): Promise<TableResponse<ResourceStruct>> {
         const rpc = await this.configuration.getRpc();
         return await rpc.get_table_rows(
-            new AssurerRequest(resourceHash, ResourceStruct.TABLE_NAME));
+            new AssurerRequest(resourceHash, ResourceStruct.TABLE_NAME, 'sha256'));
     }
 
     /**
@@ -38,7 +38,7 @@ export class AssurerContract extends BaseContract {
     public async findReports(resourceHash: string): Promise<TableResponse<ReportStruct>> {
         const rpc = await this.configuration.getRpc();
         return await rpc.get_table_rows(
-            new AssurerRequest(resourceHash, ReportStruct.TABLE_NAME));
+            new AssurerRequest(resourceHash, ReportStruct.TABLE_NAME, 'sha256'));
     }
 
     /**

@@ -122,7 +122,7 @@ ACTION assurer::unvote(const uint64_t& report_id, const name voter) {
 
   // check vote exist
   votes_index vote_table(get_self(), get_self().value);
-  auto idx = vote_table.get_index<"by.report"_n>();
+  auto idx = vote_table.get_index<"by.rep.voter"_n>();
   auto vote_key = compute_by_report_key(report_id, voter);
   auto itr = idx.find(vote_key);
   check(itr != idx.end(), "No vote exists for given report_id/voter pair");
@@ -137,7 +137,7 @@ ACTION assurer::clean(const uint64_t& report_id, const uint64_t& max_count) {
   check(report.can_be_cleaned_up(), "Report must be approved and expired for at least 3 days prior to running clean");
   
   votes_index vote_table(get_self(), get_self().value);
-  auto idx = vote_table.get_index<"by.report"_n>();
+  auto idx = vote_table.get_index<"by.rep.voter"_n>();
 
   auto vote_key_lower_bound = compute_by_report_key(report_id, name(0x0000000000000000));
   auto vote_key_upper_bound = compute_by_report_key(report_id, name(0xFFFFFFFFFFFFFFFF));
@@ -173,7 +173,7 @@ ACTION assurer::expire(const uint64_t& report_id) {
 
 // Helper
 void assurer::upsert_vote(votes_index& vote_table, const uint64_t& report_id, const name voter, const function<void(votes&)> updater) {
-  auto idx = vote_table.get_index<"by.report"_n>();
+  auto idx = vote_table.get_index<"by.rep.voter"_n>();
   auto vote_key = compute_by_report_key(report_id, voter);
 
   auto itr = idx.find(vote_key);
@@ -194,7 +194,7 @@ void assurer::upsert_vote(votes_index& vote_table, const uint64_t& report_id, co
 }
 
 float assurer::calc_ratio(votes_index& vote_table, const uint64_t& report_id) {
-  auto idx = vote_table.get_index<"by.report"_n>();
+  auto idx = vote_table.get_index<"by.rep.voter"_n>();
 
   auto vote_key_lower_bound = compute_by_report_key(report_id, name(0x0000000000000000));
   auto vote_key_upper_bound = compute_by_report_key(report_id, name(0xFFFFFFFFFFFFFFFF));
@@ -217,4 +217,4 @@ float assurer::calc_ratio(votes_index& vote_table, const uint64_t& report_id) {
   return ((float) positives) / (positives + negatives);
 }
 
-EOSIO_DISPATCH(assurer, (publish)(post))
+EOSIO_DISPATCH(assurer, (publish)(post)(vote)(unvote)(clean)(expire))

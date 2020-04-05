@@ -6,7 +6,7 @@ export class VoteStruct implements Struct {
     id: number;
     report_id: number;
     voter: string;
-    vote: boolean;
+    vote: number;
     updated_at: number; // timestamp
 
     getTableName(): string {

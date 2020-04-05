@@ -7,6 +7,8 @@ import { ResourceStorageHelper } from './resource-storage-helper';
 import { AssurerContract } from '../blockchain/assurer/assurer.contract';
 import { VoteStruct } from '../blockchain/assurer/vote.struct';
 import { Vote } from './vote';
+import { VoteAction } from '../blockchain/assurer/vote.action';
+import { UnvoteAction } from '../blockchain/assurer/unvote.action';
 
 export class ResourceManager {
 
@@ -58,20 +60,42 @@ export class ResourceManager {
     }
 
     /**
-     * Adds all votes to given report.
-     * This method should be called separately per
-     * each group of reports under single resource.
+     * Adds all votes to given reports.
      * 
      * @param reports 
      */
-    public async addVotes(reports: Report[]): Promise<void> {
-        reports.forEach(async report =>
-            report.votes = this.buildVotes(await this.getVoteStructs(report.id))
-        );
+    public async addVotes(reports: Report[]): Promise<Report[]> {
+        for (const report of reports) {
+            const votes = this.buildVotes(await this.getVoteStructs(report.id));
+            report.votes = votes;
+        }
+        return reports;
     }
 
-    public async vote(resourceId: number): Promise<void> {
+    /**
+     * Create vote action entry and transact
+     * 
+     * @param reportId
+     * @param vote true - up-vote, false down-vote 
+     */
+    public async vote(reportId: number, vote: boolean, voter: string): Promise<void> {
+        const voteAction = new VoteAction();
+        voteAction.voter = voter;
+        voteAction.vote = vote;
+        voteAction.report_id = reportId;
+        return this.assurerContract.vote(voteAction);
+    }
 
+    /**
+     * Remove vote from report given previously
+     * 
+     * @param reportId 
+     */
+    public async unvote(reportId: number, voter: string): Promise<void> {
+        const action = new UnvoteAction();
+        action.voter = voter;
+        action.report_id = reportId;
+        return this.assurerContract.unvote(action);
     }
 
     private async getResourceStruct(shaCode: string): Promise<ResourceStruct | undefined> {
@@ -105,7 +129,7 @@ export class ResourceManager {
     private buildVotes(structs: VoteStruct[]): Vote[] {
         return structs.map(s => ({
             voter: s.voter,
-            vote: s.vote
+            vote: s.vote === 1
         }));
     }
 

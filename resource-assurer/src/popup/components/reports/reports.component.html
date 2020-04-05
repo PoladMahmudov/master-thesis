@@ -28,18 +28,41 @@
                 </span>
             </div>
             <footer class="card-footer">
-                <button class="button is-small is-success is-outlined card-footer-item">
-                    <span class="icon is-small">
-                        <fa-icon [icon]="faPlus"></fa-icon>
-                    </span>
-                    <span>12</span>
-                </button>
-                <button class="button is-danger is-outlined is-small card-footer-item">
-                    <span class="icon is-small">
-                        <fa-icon [icon]="faMinus"></fa-icon>
-                    </span>
-                    <span>66</span>
-                </button>
+                <!-- Positive vote -->
+                <ng-container *ngTemplateOutlet="alreadyVoted(report.votes, true) ? unvoteTemplate : voteTemplate;
+                context:{
+                    'classes': alreadyVoted(report.votes, true) ? 'is-success is-light' : 'is-success is-outlined',
+                    'icon': faPlus,
+                    'votes': countPositives(report.votes),
+                    'vote': true
+                }"></ng-container>
+                <!-- Negative vote -->
+                <ng-container *ngTemplateOutlet="alreadyVoted(report.votes, false) ? unvoteTemplate : voteTemplate;
+                context:{
+                    'classes': alreadyVoted(report.votes, false) ? 'is-danger is-light' : 'is-danger is-outlined',
+                    'icon': faMinus,
+                    'votes': countNegatives(report.votes),
+                    'vote': false
+                }"></ng-container>
+
+                <!-- templates -->
+                <ng-template #voteTemplate let-classes="classes" let-icon="icon" let-votes="votes" let-voteValue="vote">
+                    <button class="button is-small card-footer-item" [ngClass]="classes"
+                        (click)="vote(report.id, voteValue)">
+                        <span class="icon is-small">
+                            <fa-icon [icon]="icon"></fa-icon>
+                        </span>
+                        <span>{{votes}}</span>
+                    </button>
+                </ng-template>
+                <ng-template #unvoteTemplate let-classes="classes" let-icon="icon" let-votes="votes">
+                    <button class="button is-small card-footer-item" [ngClass]="classes" (click)="unvote(report.id)">
+                        <span class="icon is-small">
+                            <fa-icon [icon]="icon"></fa-icon>
+                        </span>
+                        <span>{{votes}}</span>
+                    </button>
+                </ng-template>
             </footer>
         </div>
     </ng-container>

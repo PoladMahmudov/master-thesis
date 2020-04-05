@@ -69,10 +69,6 @@ CONTRACT assurer : public contract {
         return ((uint128_t) voter.value) << 64 | report_id;
     }
 
-    static uint128_t compute_by_voter_key(const uint64_t report_id, const name voter) {
-        return ((uint128_t) report_id) << 64 | voter.value;
-    }
-
     TABLE resources {
       uint64_t    id;
       checksum256 hash; // use secondary multi_index with eosio::checksum256
@@ -122,14 +118,14 @@ CONTRACT assurer : public contract {
       uint32_t updated_at;
 
       uint64_t primary_key() const { return id; }
-      uint128_t by_report() const { return assurer::compute_by_report_key(report_id, voter); }
-      uint128_t by_voter() const { return assurer::compute_by_voter_key(report_id, voter); }
+      uint64_t by_report() const { return report_id; }
+      uint128_t by_report_voter() const { return assurer::compute_by_report_key(report_id, voter); }
     };
 
     typedef eosio::multi_index<
         "votes"_n, votes,
-        indexed_by<"by.report"_n, const_mem_fun<votes, uint128_t, &votes::by_report>>,
-        indexed_by<"by.voter"_n, const_mem_fun<votes, uint128_t, &votes::by_voter>>
+        indexed_by<"by.report"_n, const_mem_fun<votes, uint64_t, &votes::by_report>>,
+        indexed_by<"by.rep.voter"_n, const_mem_fun<votes, uint128_t, &votes::by_report_voter>>
     > votes_index;
 
     void upsert_vote(
