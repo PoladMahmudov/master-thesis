@@ -116,7 +116,10 @@ function buildReports(structs: ReadonlyArray<ReportStruct>): Report[] {
         reportUri: struct.report_uri,
         title: struct.title,
         description: struct.description,
-        verdict: struct.verdict,
-        votes: []
+        verdict: struct.verdict === 1,
+        votes: [],
+        createdOn: new Date(struct.created_on * 1000),
+        expiresOn: new Date(struct.expires_on * 1000),
+        positivesRatio: struct.ratio
     }));
 }

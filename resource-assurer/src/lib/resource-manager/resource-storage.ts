@@ -10,8 +10,11 @@ export class Report {
     description: string;
     title: string;
     verdict: boolean;
-    owner?: string;
+    owner: string;
     votes: Vote[] = [];
+    createdOn: Date; 
+    expiresOn: Date;
+    positivesRatio: number;
 }
 
 export enum ResourceStateType {
@@ -24,10 +27,10 @@ export class Resource {
     tabId: number;
     resourceHash: string;
     resourceUrl: string;
-    resourceRepoUrl?: string;
+    resourceRepoUrl: string;
     state: ResourceStateType;
-    owner?: string;
-    reports: Report[];
+    owner: string;
+    reports: Report[] = [];
 }
 
 /**

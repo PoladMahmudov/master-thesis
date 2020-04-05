@@ -11,41 +11,66 @@
                     </span>
                 </div>
                 <div class="report-verdict card-header-icon">
-                    <ng-container *ngIf="report.verdict; else insecureTag">
-                        <span class="tag is-success is-small is-light">secure</span>
-                    </ng-container>
-                    <ng-template #insecureTag>
-                        <span class="tag is-danger is-small is-light">insecure</span>
-                    </ng-template>
+                    <div class="tags has-addons">
+                        <ng-container *ngIf="!expired(report.expiresOn)">
+                            <span class="tag is-small is-warning is-light">
+                                {{expirationTime(report.expiresOn)}} left</span>
+                        </ng-container>
+                        <ng-container *ngIf="report.verdict; else insecureTag">
+                            <span class="tag is-success is-small"
+                                [ngClass]="expired(report.expiresOn) ? '' : 'is-light'">secure</span>
+                        </ng-container>
+                        <ng-template #insecureTag>
+                            <span class="tag is-danger is-small"
+                                [ngClass]="expired(report.expiresOn) ? '' : 'is-light'">insecure</span>
+                        </ng-template>
+                        <ng-container *ngIf="expired(report.expiresOn)">
+                            <span class="tag is-small is-light">
+                                {{report.positivesRatio * 100}}%</span>
+                        </ng-container>
+                    </div>
                 </div>
             </div>
             <div class="card-content">
                 <div class="content">
                     <p>{{report.description}}</p>
                 </div>
+                <time
+                    class="is-italic is-size-7 has-text-grey-light">{{report.createdOn | date : 'MMM d, y, hh:mm'}}</time>
                 <span class="is-italic is-size-7 has-text-primary">
                     @{{report.owner}}
                 </span>
             </div>
             <footer class="card-footer">
                 <!-- Positive vote -->
-                <ng-container *ngTemplateOutlet="alreadyVoted(report.votes, true) ? unvoteTemplate : voteTemplate;
-                context:{
-                    'classes': alreadyVoted(report.votes, true) ? 'is-success is-light' : 'is-success is-outlined',
-                    'icon': faPlus,
-                    'votes': countPositives(report.votes),
-                    'vote': true
-                }"></ng-container>
-                <!-- Negative vote -->
-                <ng-container *ngTemplateOutlet="alreadyVoted(report.votes, false) ? unvoteTemplate : voteTemplate;
-                context:{
-                    'classes': alreadyVoted(report.votes, false) ? 'is-danger is-light' : 'is-danger is-outlined',
-                    'icon': faMinus,
-                    'votes': countNegatives(report.votes),
-                    'vote': false
-                }"></ng-container>
+                <ng-container *ngIf="!expired(report.expiresOn); else cleanTemplate">
+                    <ng-container *ngTemplateOutlet="alreadyVoted(report.votes, true) ? unvoteTemplate : voteTemplate;
+                    context:{
+                        'classes': alreadyVoted(report.votes, true) ? 'is-success is-light' : 'is-success is-outlined',
+                        'icon': faPlus,
+                        'votes': countPositives(report.votes),
+                        'vote': true
+                    }"></ng-container>
+                    <!-- Negative vote -->
+                    <ng-container *ngTemplateOutlet="alreadyVoted(report.votes, false) ? unvoteTemplate : voteTemplate;
+                    context:{
+                        'classes': alreadyVoted(report.votes, false) ? 'is-danger is-light' : 'is-danger is-outlined',
+                        'icon': faMinus,
+                        'votes': countNegatives(report.votes),
+                        'vote': false
+                    }"></ng-container>
+                    <!-- Expire report -->
+                    <ng-container *ngIf="canExpire(report.createdOn, report.owner)">
+                        <button class="button is-small card-footer-item is-warning" (click)="expire(report.id)">
+                            <span class="icon is-small">
+                                <fa-icon [icon]="faHourglassEnd"></fa-icon>
+                            </span>
+                            <span>Expire</span>
+                        </button>
+                    </ng-container>
+                </ng-container>
 
-                <!-- templates -->
+                <!-- Templates -->
                 <ng-template #voteTemplate let-classes="classes" let-icon="icon" let-votes="votes" let-voteValue="vote">
                     <button class="button is-small card-footer-item" [ngClass]="classes"
                         (click)="vote(report.id, voteValue)">
@@ -62,6 +87,36 @@
                         </span>
                         <span>{{votes}}</span>
                     </button>
+                </ng-template>
+                <ng-template #cleanTemplate>
+                    <ng-container *ngIf="canClean(report.expiresOn); 
+                        then report.votes.length === 0 ? cleanedUpTemplate : this; 
+                        else cleanOnHoldTemplate">
+                        <button class="button is-small card-footer-item is-warning is-outlined has-text-dark"
+                            (click)="clean(report.id, report.votes.length > 100 ? 100 : report.votes.length)">
+                            <span class="icon is-small">
+                                <fa-icon [icon]="faBroom"></fa-icon>
+                            </span>
+                            <span>Clean votes
+                                ({{report.votes.length > 100 ? 100 : report.votes.length}}/{{report.votes.length}})</span>
+                        </button>
+                    </ng-container>
+                </ng-template>
+                <ng-template #cleanOnHoldTemplate>
+                    <p class="button is-small card-footer-item">
+                        <span class="icon is-small">
+                            <fa-icon [icon]="faHourglassEnd"></fa-icon>
+                        </span>
+                        <span>Can be cleaned in {{cleanTime(report.expiresOn)}}</span>
+                    </p>
+                </ng-template>
+                <ng-template #cleanedUpTemplate>
+                    <p class="button is-small card-footer-item">
+                        <span class="icon is-small">
+                            <fa-icon [icon]="faCheck"></fa-icon>
+                        </span>
+                        <span>Cleaned up</span>
+                    </p>
                 </ng-template>
             </footer>
         </div>

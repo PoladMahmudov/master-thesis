@@ -19,7 +19,7 @@ export class ReportStruct implements Struct {
     readonly report_uri: string;
     readonly title: string;
     readonly description: string;
-    readonly verdict: boolean;
+    readonly verdict: number;
     readonly created_on: number; // timestamp
     readonly expires_on: number; // timestamp
     readonly ratio: number; // positive votes divided to all
