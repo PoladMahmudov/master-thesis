@@ -2,7 +2,7 @@
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
-import { rpcUriIsSet, storeRpcUri } from 'src/lib/blockchain/configuration/configuration-storage';
+import { configurationIsSet, storeConfiguration } from 'src/lib/blockchain/configuration/configuration-storage';
 import { accountIsSet, storeAccount } from 'src/lib/blockchain/configuration/account-storage';
 
 export const environment = {
@@ -32,8 +32,8 @@ export const init = async () => {
     });
     console.log('[DEV] USER ACCOUNT WAS SET.');
   }
-  if (!(await rpcUriIsSet())) {
-    storeRpcUri('http://localhost:8888');
-    console.log('[DEV] RPC URI WAS SET.');
+  if (!(await configurationIsSet())) {
+    storeConfiguration({ rpcUri: 'http://localhost:8888', reliabilityThreshold: 50 });
+    console.log('[DEV] CONFIG WAS SET.');
   }
 }

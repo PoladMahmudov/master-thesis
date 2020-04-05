@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { faLink } from '@fortawesome/free-solid-svg-icons';
 import { getResourceByTab, addTabChangeListener, ResourceStateType, Resource, Report } from 'src/lib/resource-manager/resource-storage';
+import { getReliabilityThreshold } from 'src/lib/blockchain/configuration/configuration-storage';
 
 @Component({
   selector: 'popup-resources',
@@ -13,6 +14,7 @@ export class ResourcesComponent implements OnInit {
   readonly faLink = faLink;
 
   private _resources: Resource[] = [];
+  private _threshold = 50;
 
   constructor() {
   }
@@ -24,6 +26,7 @@ export class ResourcesComponent implements OnInit {
   ngOnInit(): void {
     this.initResources();
     this.startStorageListener();
+    this.setReliabilityThreshold();
   }
 
   public retrieveFileName(uri: string): string {
@@ -40,7 +43,8 @@ export class ResourcesComponent implements OnInit {
     if (reports.length <= 0) {
       return 0;
     }
-    const reliable = reports.reduce((acc, current) => acc + (current.verdict ? 1 : 0), 0);
+    const reliable = reports.reduce((acc, current) =>
+      acc + (current.verdict && current.positivesRatio * 100 > this._threshold ? 1 : 0), 0);
     return +(reliable / reports.length * 100).toFixed(2);
   }
 
@@ -59,5 +63,10 @@ export class ResourcesComponent implements OnInit {
   private getCurrentTab(): Promise<number> {
     return browser.tabs.query({ active: true, currentWindow: true })
       .then(tab => tab[0].id);
+  }
+
+  private setReliabilityThreshold(): void {
+    getReliabilityThreshold()
+      .then(threshold => this._threshold = threshold);
   }
 }

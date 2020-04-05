@@ -1,8 +1,13 @@
 import { JsonRpc, Api } from 'eosjs';
 import { JsSignatureProvider } from 'eosjs/dist/eosjs-jssig';
 
-/** Browser storage alias for RPC config  */
-const rpcUriAlias = 'rpc-uri';
+export class ConfigurationEntry {
+    rpcUri: string;
+    reliabilityThreshold: number = 50; // in percentage
+}
+
+/** Browser storage alias for config  */
+const configAlias = 'app-config';
 
 /**
  * Create EOSJS RPC with configurations 
@@ -28,19 +33,37 @@ export async function getApi(): Promise<Api> {
 }
 
 /**
- * Stores blockchain URI for RPC configuration in
- * browser storage. Storage structure below.
+ * Stores app configuration in browser storage. 
+ * Storage given structure below.
+ * 
+ * `rpcUri` - full uri with port number, etc;
+ * 
+ * `reliabilityThreshold` - min limit of positive votes 
+ * stating the reliability of given report.
  * 
  * @example
  * {
- *      "rpc-uri": "http://localhost:8888"
+ *      "app-config": {
+ *          "rpcUri": "http://localhost:8888",
+ *          "reliabilityThreshold": 50
+ *      }
  * }
  * 
- * @param rpcUri full uri with port number, etc.
+ * @param config configuration
  */
-export async function storeRpcUri(rpcUri: string): Promise<void> {
+export async function storeConfiguration(config: ConfigurationEntry): Promise<void> {
     return browser.storage.local
-        .set({ [rpcUriAlias]: rpcUri });
+        .set({ [configAlias]: config });
+}
+
+/**
+ * Retrieve application configuration from browser storage
+ * @returns configuration
+ */
+export async function getConfiguration(): Promise<ConfigurationEntry> {
+    return browser.storage.local
+        .get(configAlias)
+        .then(storage => storage[configAlias]);
 }
 
 /**
@@ -48,22 +71,30 @@ export async function storeRpcUri(rpcUri: string): Promise<void> {
  * @returns URI
  */
 export async function getRpcUri(): Promise<string> {
-    return browser.storage.local
-        .get(rpcUriAlias)
-        .then(storage => storage[rpcUriAlias]);
+    return getConfiguration()
+        .then(config => config.rpcUri);
 }
 
 /**
- * Check RPC URI is set
+ * Retrieve Reliability Threshold from browser storage
+ * @returns percentages
  */
-export async function rpcUriIsSet(): Promise<boolean> {
-    return getRpcUri().then(rpc => !!rpc);
+export async function getReliabilityThreshold(): Promise<number> {
+    return getConfiguration()
+        .then(config => config ? config.reliabilityThreshold : 50);
 }
 
 /**
- * Removes RPC configuration info from browser storage
+ * Check Configuration is set
  */
-export async function removeRpcUri(): Promise<void> {
+export async function configurationIsSet(): Promise<boolean> {
+    return getConfiguration().then(config => !!config);
+}
+
+/**
+ * Removes configuration info from browser storage
+ */
+export async function removeConfiguration(): Promise<void> {
     return browser.storage.local
-        .remove(rpcUriAlias);
+        .remove(configAlias);
 }
