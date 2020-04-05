@@ -66,7 +66,7 @@ CONTRACT assurer : public contract {
     }
 
     static uint128_t compute_by_report_key(const uint64_t report_id, const name voter) {
-        return ((uint128_t) voter.value) << 64 | report_id;
+        return ((uint128_t) report_id) << 64 | voter.value;
     }
 
     TABLE resources {
