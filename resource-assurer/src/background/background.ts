@@ -1,4 +1,12 @@
 import { BackgroundHelper } from './background-helper';
+import { init } from 'src/environments/environment';
+
+/** 
+ * Initialize environment.
+ * Set up default configurations depending on 
+ * environment mode (dev/production). 
+ */
+init();
 
 const helper = new BackgroundHelper();
 

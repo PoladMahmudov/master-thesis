@@ -2,8 +2,8 @@
 // `ng build --prod` replaces `environment.ts` with `environment.prod.ts`.
 // The list of file replacements can be found in `angular.json`.
 
-import { AccountStorageHelper } from 'src/lib/blockchain/configuration/account-storage-helper';
-import { ConfigurationHelper } from 'src/lib/blockchain/configuration/configuration-helper';
+import { rpcUriIsSet, storeRpcUri } from 'src/lib/blockchain/configuration/configuration-storage';
+import { accountIsSet, storeAccount } from 'src/lib/blockchain/configuration/account-storage';
 
 export const environment = {
   production: false
@@ -25,17 +25,15 @@ export const environment = {
  * is run in development mode only.
 */
 export const init = async () => {
-  const accountHelper = new AccountStorageHelper();
-  const configurationHelper = new ConfigurationHelper();
-  if (!(await accountHelper.isSet())) {
-    accountHelper.store({
+  if (!(await accountIsSet())) {
+    storeAccount({
       name: 'eosio',
       privateKey: '5KQwrPbwdL6PhXujxW37FSSQZ1JiwsST4cqQzDeyXtP79zkvFD3'
     });
     console.log('[DEV] USER ACCOUNT WAS SET.');
   }
-  if (!(await configurationHelper.rpcUriIsSet())) {
-    configurationHelper.storeRpcUri('http://localhost:8888');
+  if (!(await rpcUriIsSet())) {
+    storeRpcUri('http://localhost:8888');
     console.log('[DEV] RPC URI WAS SET.');
   }
 }

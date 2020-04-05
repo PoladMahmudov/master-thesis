@@ -1,12 +1,9 @@
-import { Resource } from 'src/lib/resource-manager/resource';
-import { ResourceManager } from 'src/lib/resource-manager/resource-manager';
+import { Resource } from 'src/lib/resource-manager/resource-storage';
+import { fetchAndStoreResource } from 'src/lib/resource-manager/resource-manager';
 
 export class BackgroundHelper {
 
-    private readonly resourceManager: ResourceManager;
-
     constructor() {
-        this.resourceManager = new ResourceManager();
     }
 
     // https://developer.mozilla.org/en-US/docs/Web/API/SubtleCrypto/digest
@@ -24,6 +21,6 @@ export class BackgroundHelper {
     }
 
     public async storeResource(tabId: number, hash: string, uri: string): Promise<Resource> {
-        return this.resourceManager.retrieveAndStoreResource(tabId, hash, uri);
+        return fetchAndStoreResource(tabId, hash, uri);
     }
 }

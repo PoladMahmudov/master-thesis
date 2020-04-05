@@ -1,9 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { Resource } from 'src/lib/resource-manager/resource';
-import { ResourceStorageHelper } from 'src/lib/resource-manager/resource-storage-helper';
-import { ResourceStateType } from 'src/lib/resource-manager/resource-state.type';
 import { faLink } from '@fortawesome/free-solid-svg-icons';
-import { Report } from 'src/lib/resource-manager/report';
+import { getResourceByTab, addTabChangeListener, ResourceStateType, Resource, Report } from 'src/lib/resource-manager/resource-storage';
 
 @Component({
   selector: 'popup-resources',
@@ -17,7 +14,7 @@ export class ResourcesComponent implements OnInit {
 
   private _resources: Resource[] = [];
 
-  constructor(private readonly storage: ResourceStorageHelper) {
+  constructor() {
   }
 
   get resources(): Resource[] {
@@ -48,12 +45,12 @@ export class ResourcesComponent implements OnInit {
   }
 
   private async initResources(): Promise<void> {
-    this.storage.getByTab(await this.getCurrentTab())
+    getResourceByTab(await this.getCurrentTab())
       .then(resources => this._resources = resources);
   }
 
   private async startStorageListener() {
-    this.storage.addChangeListener(
+    addTabChangeListener(
       await this.getCurrentTab(),
       () => this.initResources()
     );

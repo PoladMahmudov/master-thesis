@@ -1,15 +1,9 @@
 import { BaseContract } from '../base.contract';
-import { ResourceStruct } from './resource.struct';
-import { TableResponse } from '../table-response';
-import { AssurerRequest } from './assurer-request';
-import { ReportStruct } from './report.struct';
-import { VoteStruct } from './vote.struct';
-import { PostAction } from './post.action';
-import { PublishAction } from './publish.action';
-import { VoteAction } from './vote.action';
-import { UnvoteAction } from './unvote.action';
-import { ExpireAction } from './expire.action';
-import { CleanAction } from './clean.action';
+import { TableResponse } from '../table.response';
+import { AssurerRequest } from './assurer.request';
+import { ResourceStruct, ReportStruct, VoteStruct } from './structs';
+import { PublishAction, PostAction, VoteAction, UnvoteAction, ExpireAction, CleanAction } from './actions';
+import { getRpc } from '../configuration/configuration-storage';
 
 export class AssurerContract extends BaseContract {
 
@@ -25,7 +19,7 @@ export class AssurerContract extends BaseContract {
      * @returns rows array with either empty or single resource value
      */
     public async findResource(resourceHash: string): Promise<TableResponse<ResourceStruct>> {
-        const rpc = await this.configuration.getRpc();
+        const rpc = await getRpc();
         return await rpc.get_table_rows(
             new AssurerRequest(resourceHash, ResourceStruct.TABLE_NAME, 'sha256'));
     }
@@ -36,7 +30,7 @@ export class AssurerContract extends BaseContract {
      * @returns rows array with either empty or reports value
      */
     public async findReports(resourceHash: string): Promise<TableResponse<ReportStruct>> {
-        const rpc = await this.configuration.getRpc();
+        const rpc = await getRpc();
         return await rpc.get_table_rows(
             new AssurerRequest(resourceHash, ReportStruct.TABLE_NAME, 'sha256'));
     }
@@ -47,7 +41,7 @@ export class AssurerContract extends BaseContract {
      * @returns rows array with either empty or vote values
      */
     public async findVotes(reportId: number): Promise<TableResponse<VoteStruct>> {
-        const rpc = await this.configuration.getRpc();
+        const rpc = await getRpc();
         return await rpc.get_table_rows(
             new AssurerRequest('' + reportId, VoteStruct.TABLE_NAME));
     }
@@ -58,7 +52,7 @@ export class AssurerContract extends BaseContract {
      */
     public async publish(action: PublishAction): Promise<void> {
         this.validate(action);
-        return this.transact<PublishAction>(action);
+        return this.transact<PublishAction>(action, PublishAction.NAME);
     }
 
     /**
@@ -67,7 +61,7 @@ export class AssurerContract extends BaseContract {
      */
     public async post(action: PostAction): Promise<void> {
         this.validate(action);
-        return this.transact<PostAction>(action);
+        return this.transact<PostAction>(action, PostAction.NAME);
     }
 
     /**
@@ -76,7 +70,7 @@ export class AssurerContract extends BaseContract {
      */
     public async vote(action: VoteAction): Promise<void> {
         this.validate(action);
-        return this.transact<VoteAction>(action);
+        return this.transact<VoteAction>(action, VoteAction.NAME);
     }
 
     /**
@@ -85,7 +79,7 @@ export class AssurerContract extends BaseContract {
      */
     public async unvote(action: UnvoteAction): Promise<void> {
         this.validate(action);
-        return this.transact<UnvoteAction>(action);
+        return this.transact<UnvoteAction>(action, UnvoteAction.NAME);
     }
 
     /**
@@ -98,7 +92,7 @@ export class AssurerContract extends BaseContract {
      */
     public async expire(action: ExpireAction): Promise<void> {
         this.validate(action);
-        return this.transact<ExpireAction>(action);
+        return this.transact<ExpireAction>(action, ExpireAction.NAME);
     }
 
     /**
@@ -107,7 +101,7 @@ export class AssurerContract extends BaseContract {
      */
     public async clean(action: CleanAction): Promise<void> {
         this.validate(action);
-        return this.transact<CleanAction>(action);
+        return this.transact<CleanAction>(action, CleanAction.NAME);
     }
 
     private validate(o: any): void {

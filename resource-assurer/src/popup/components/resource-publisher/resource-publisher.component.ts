@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { Resource } from 'src/lib/resource-manager/resource';
-import { ResourceStorageHelper } from 'src/lib/resource-manager/resource-storage-helper';
-import { ResourceManager } from 'src/lib/resource-manager/resource-manager';
 import { AssurerContract } from 'src/lib/blockchain/assurer/assurer.contract';
-import { PublishAction } from 'src/lib/blockchain/assurer/publish.action';
-import { AccountStorageHelper } from 'src/lib/blockchain/configuration/account-storage-helper';
+import { PublishAction } from 'src/lib/blockchain/assurer/actions';
+import { getCurrentAccountName } from 'src/lib/blockchain/configuration/account-storage';
+import { getResourceByHash, Resource } from 'src/lib/resource-manager/resource-storage';
+import { refreshResource } from 'src/lib/resource-manager/resource-manager';
 
 @Component({
   selector: 'popup-resource-publisher',
@@ -19,10 +18,7 @@ export class ResourcePublisherComponent implements OnInit {
   constructor(
     private readonly route: ActivatedRoute,
     private readonly router: Router,
-    private readonly storage: ResourceStorageHelper,
-    private readonly blockchain: AssurerContract,
-    private readonly resourceManager: ResourceManager,
-    private readonly accountHelper: AccountStorageHelper
+    private readonly blockchain: AssurerContract
   ) { }
 
   ngOnInit(): void {
@@ -36,21 +32,21 @@ export class ResourcePublisherComponent implements OnInit {
 
   async submitAction(): Promise<void> {
     this.blockchain.publish(this._action)
-      .then(() => this.resourceManager.refreshResource(this._action.hash))
+      .then(() => refreshResource(this._action.hash))
       .then(() => this.router.navigate(['/']));
   }
 
   private async getResource(hash: string): Promise<void> {
-    this.storage.getByHash(hash)
+    getResourceByHash(hash)
       .then(res => this.initAction(res));
   }
 
   private async initAction(resource: Resource): Promise<void> {
-    const action = new PublishAction();
-    action.hash = resource.resourceHash;
-    action.repo_uri = undefined;
-    action.uri = resource.resourceUrl;
-    action.user = await this.accountHelper.getCurrentName();
-    this._action = action;
+    this._action = {
+      hash: resource.resourceHash,
+      repo_uri: undefined,
+      uri: resource.resourceUrl,
+      user: await getCurrentAccountName()
+    };
   }
 }

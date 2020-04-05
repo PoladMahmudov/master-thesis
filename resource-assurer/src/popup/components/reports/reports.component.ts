@@ -1,12 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { ResourceStorageHelper } from 'src/lib/resource-manager/resource-storage-helper';
-import { Report } from 'src/lib/resource-manager/report';
-import { faLink, faPlus, faMinus } from '@fortawesome/free-solid-svg-icons'
-import { ResourceManager } from 'src/lib/resource-manager/resource-manager';
-import { Vote } from 'src/lib/resource-manager/vote';
-import { AccountStorageHelper } from 'src/lib/blockchain/configuration/account-storage-helper';
-import { UserAccount } from 'src/lib/blockchain/configuration/user-accout';
+import { faLink, faPlus, faMinus } from '@fortawesome/free-solid-svg-icons';
+import { getCurrentAccount } from 'src/lib/blockchain/configuration/account-storage';
+import { getResourceByHash, Report, Vote } from 'src/lib/resource-manager/resource-storage';
+import { AssurerContract } from 'src/lib/blockchain/assurer/assurer.contract';
+import { fetchAndAddVotes } from 'src/lib/resource-manager/resource-manager';
 
 @Component({
   selector: 'popup-reports',
@@ -16,16 +14,14 @@ import { UserAccount } from 'src/lib/blockchain/configuration/user-accout';
 export class ReportsComponent implements OnInit {
 
   private _reports: Report[];
-  private _account: UserAccount;
+  private _account: string;
   readonly faLink = faLink;
   readonly faPlus = faPlus;
   readonly faMinus = faMinus;
 
   constructor(
     private readonly route: ActivatedRoute,
-    private readonly storage: ResourceStorageHelper,
-    private readonly resourceManager: ResourceManager,
-    private readonly accountHelper: AccountStorageHelper
+    private readonly contract: AssurerContract
   ) { }
 
   ngOnInit(): void {
@@ -39,13 +35,18 @@ export class ReportsComponent implements OnInit {
   }
 
   vote(reportId: number, vote: boolean) {
-    this.resourceManager.vote(reportId, vote, this._account.name)
-      .then(() => this.updateVotes());
+    this.contract.vote({
+      voter: this._account,
+      vote: vote,
+      report_id: reportId
+    }).then(() => this.updateVotes());
   }
 
   unvote(reportId: number) {
-    this.resourceManager.unvote(reportId, this._account.name)
-      .then(() => this.updateVotes());
+    this.contract.unvote({
+      voter: this._account,
+      report_id: reportId
+    }).then(() => this.updateVotes());
   }
 
   countPositives(votes: Vote[]): number {
@@ -62,22 +63,22 @@ export class ReportsComponent implements OnInit {
     if (votes.length === 0) {
       return false;
     }
-    return !!votes.find(v => v.voter === this._account.name && v.vote === vote);
+    return !!votes.find(v => v.voter === this._account && v.vote === vote);
   }
 
   private getResource(hash: string): void {
-    this.storage.getByHash(hash)
-      .then(resource => this.resourceManager.addVotes(resource.reports))
+    getResourceByHash(hash)
+      .then(resource => fetchAndAddVotes(resource.reports))
       .then(reports => this._reports = reports);
   }
 
   private getCurrentAccount(): void {
-    this.accountHelper.getCurrent()
-      .then(account => this._account = account);
+    getCurrentAccount()
+      .then(account => this._account = account.name);
   }
 
   private updateVotes() {
-    this.resourceManager.addVotes(this._reports)
+    fetchAndAddVotes(this._reports)
       .then(reports => this._reports = reports);
   }
 }

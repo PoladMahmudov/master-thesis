@@ -1,4 +1,6 @@
-export class AssurerRequest {    
+import { TableRequest } from '../table.request';
+
+export class AssurerRequest implements TableRequest {    
     json = true;
     code = 'assurer';
     scope = 'assurer';
@@ -7,7 +9,7 @@ export class AssurerRequest {
     lower_bound: string;
     key_type = '';
     index_position = 2;
-    limit = 50;
+    limit = 100;
 
     constructor(by: string, table: string, keyType: string = 'i64') {
         this.upper_bound = by;

@@ -1,17 +1,17 @@
 import { Action } from './action';
 
 export interface Transaction<A extends Action> {
-    actions: ActionWrapper<A>[];
+    readonly actions: ReadonlyArray<ActionWrapper<A>>;
 }
 
 interface ActionWrapper<D> {
-    account: string,
-    name: string,
-    authorization: Authorization[],
-    data: D;
+    readonly account: string,
+    readonly name: string,
+    readonly authorization: ReadonlyArray<Authorization>;
+    readonly data: D;
 }
 
 interface Authorization {
-    actor: string;
-    permission: string;
+    readonly actor: string;
+    readonly permission: string;
 }

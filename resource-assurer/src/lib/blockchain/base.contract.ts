@@ -2,29 +2,26 @@ import { RpcError } from 'eosjs';
 import { JsSignatureProvider } from 'eosjs/dist/eosjs-jssig';
 import { Transaction } from './transaction';
 import { Action } from './action';
-import { AccountStorageHelper } from './configuration/account-storage-helper';
-import { ConfigurationHelper } from './configuration/configuration-helper';
+import { getApi } from './configuration/configuration-storage';
+import { getCurrentAccount } from './configuration/account-storage';
 
 /** Base class for all contracts' manipulations */
 export abstract class BaseContract {
 
-    protected readonly accountHelper = new AccountStorageHelper();
-    protected readonly configuration = new ConfigurationHelper();
-
-    constructor(private readonly account: string) {
+    constructor(private readonly contractAccount: string) {
     }
 
     /**
      * Commits transaction
      * @param action name of the action
-     * @param payload is a raw contract action payload
+     * @param actionName name of the action
      */
-    protected async transact<A extends Action>(action: A): Promise<void> {
-        const account = await this.accountHelper.getCurrent();
-        const api = await this.configuration.getApi();
-        api.signatureProvider = new JsSignatureProvider([account.privateKey]);
-        
-        const transaction = this.createTransaction(action, account.name);
+    protected async transact<A extends Action>(action: A, actionName: string): Promise<void> {
+        const userAccount = await getCurrentAccount();
+        const api = await getApi();
+        api.signatureProvider = new JsSignatureProvider([userAccount.privateKey]);
+
+        const transaction = this.createTransaction(action, userAccount.name, actionName);
         try {
             const result = await api.transact(
                 transaction,
@@ -44,16 +41,16 @@ export abstract class BaseContract {
      * Creates transaction object for contract action
      * @param action payload of a transaction 
      */
-    private createTransaction<A extends Action>(action: A, actor: string): Transaction<A> {
+    private createTransaction<A extends Action>(action: A, actor: string, actionName: string): Transaction<A> {
         return {
             actions: [{
-                account: this.account,
-                name: action.getActionName(),
+                account: this.contractAccount,
+                name: actionName,
                 authorization: [{
                     actor: actor,
                     permission: 'active',
                 }],
-                data: { ...action },
+                data: action,
             }]
         }
     }
