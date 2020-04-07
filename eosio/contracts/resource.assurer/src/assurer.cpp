@@ -162,12 +162,22 @@ ACTION assurer::expire(const uint64_t& report_id) {
   auto reporter = report.user;
   require_auth(reporter);
 
-  votes_index vote_table(get_self(), get_self().value);
-  float ratio = calc_ratio(vote_table, report.id);
+  rate_report_ratio(report_id);
 
   report_table.modify(report, reporter, [&](auto& row) {
     row.expires_on = now();
-    row.ratio      = ratio;
+  });
+}
+
+ACTION assurer::rate(const uint64_t& report_id) {
+  reports_index report_table(get_self(), get_self().value);
+  auto& report = report_table.get(report_id, "Report doesn't exist");
+  check(report.is_expired(), "Report has not expired yet");
+
+  votes_index vote_table(get_self(), get_self().value);
+
+  report_table.modify(report, get_self(), [&](auto& row) {
+    row.ratio = calc_ratio(vote_table, report_id);
   });
 }
 
@@ -191,6 +201,22 @@ void assurer::upsert_vote(votes_index& vote_table, const uint64_t& report_id, co
       updater(row);
     });
   }
+}
+
+/** 
+* As a reminder, to use the active authority inline you will 
+* need your contract's to give active authority to oeosio.code
+* run:
+* `cleos set account permission assurer active --add-code`
+* @external https://docs.google.com/document/d/1QH3-6c0MubWg8kwf95pZAlDK2fYiiluyL04LKxeVzR0/edit?usp=drivesdk&authuser=0 
+*/
+void assurer::rate_report_ratio(const uint64_t& report_id) {
+  action(
+    permission_level{get_self(),"active"_n},
+    get_self(),
+    "rate"_n,
+    report_id
+  ).send();
 }
 
 float assurer::calc_ratio(votes_index& vote_table, const uint64_t& report_id) {
@@ -217,4 +243,5 @@ float assurer::calc_ratio(votes_index& vote_table, const uint64_t& report_id) {
   return ((float) positives) / (positives + negatives);
 }
 
-EOSIO_DISPATCH(assurer, (publish)(post)(vote)(unvote)(clean)(expire))
+
+EOSIO_DISPATCH(assurer, (publish)(post)(vote)(unvote)(clean)(expire)(rate))

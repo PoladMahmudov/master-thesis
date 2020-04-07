@@ -8,10 +8,12 @@ using eosio::checksum256;
 using eosio::name;
 using eosio::check;
 using eosio::current_time_point;
+using eosio::permission_level;
 using eosio::multi_index;
 using eosio::indexed_by;
 using eosio::const_mem_fun;
 using eosio::contract;
+using eosio::action;
 
 CONTRACT assurer : public contract {
   public:
@@ -39,6 +41,10 @@ CONTRACT assurer : public contract {
       const bool&     vote
     );
 
+    ACTION rate(
+      const uint64_t& report_id
+    );
+
     ACTION unvote(
       const uint64_t& report_id,
       const name      voter
@@ -59,7 +65,7 @@ CONTRACT assurer : public contract {
     // 3 months in seconds (Computatio: 3 months * average days per month * 24 hours * 60 minutes * 60 seconds)
     constexpr static uint32_t THREE_MONTHS_IN_SECONDS = (uint32_t) (3 * (365.25 / 12) * 24 * 60 * 60);
     // a week in seconds (Computatio: week * 7 days * 24 hours * 60 minutes * 60 seconds)
-    constexpr static uint32_t WEEK_IN_SECONDS = (uint32_t) (7 * 24 * 60 * 60);
+    constexpr static uint32_t WEEK_IN_SECONDS = 7 * 24 * 60 * 60;
 
     static uint32_t now() {
       return current_time_point().sec_since_epoch();
@@ -133,6 +139,10 @@ CONTRACT assurer : public contract {
       const uint64_t& report_id, 
       const name voter, 
       const function<void(votes&)> updater
+    );
+
+    void rate_report_ratio(
+      const uint64_t& report_id
     );
 
     float calc_ratio(
