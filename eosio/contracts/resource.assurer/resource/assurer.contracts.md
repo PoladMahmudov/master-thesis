@@ -93,3 +93,10 @@ summary: Vote for the report while it hasn't expired.
 The {{ voter }}s can cast a vote of {{ vote }} on {{ report_id }}. To change the vote, they may call another `vote` action, with only the most recent `vote` of {{ vote }} value being the `vote`, which {{ voter }} intend to be considered as valid. They acknowledge that using the `unvote` action after placing a `vote` will render the previous `vote` of {{ vote_value }} null and void. 
 If {{ voter }}s, they are not the beneficial owner of these tokens, they stipulate that they have proof that they’ve been authorized to vote these tokens by their beneficial owner(s).
 
+
+<h1 class="contract">rate</h1>
+---
+spec-version: 0.0.2
+title: Rate
+summary: Calclute the ratio of positive votes to all votes.
+
