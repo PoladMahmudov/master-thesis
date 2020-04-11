@@ -80,6 +80,16 @@
             ]
         },
         {
+            "name": "rate",
+            "base": "",
+            "fields": [
+                {
+                    "name": "report_id",
+                    "type": "uint64"
+                }
+            ]
+        },
+        {
             "name": "reports",
             "base": "",
             "fields": [
@@ -230,6 +240,11 @@
             "name": "publish",
             "type": "publish",
             "ricardian_contract": "---\r\nspec-version: 0.0.2\r\ntitle: Publish\r\nsummary: This action will publish new web resource entry to resources table. Hash of the resource, server URI and version control repository URI must be provided.\r\n---"
+        },
+        {
+            "name": "rate",
+            "type": "rate",
+            "ricardian_contract": "---\r\nspec-version: 0.0.2\r\ntitle: Rate\r\nsummary: Calclute the ratio of positive votes to all votes."
         },
         {
             "name": "unvote",
