@@ -10,6 +10,7 @@ import { ResourcePublisherComponent } from './components/resource-publisher/reso
 import { ReportPublisherComponent } from './components/report-publisher/report-publisher.component';
 import { AssurerContract } from 'src/lib/blockchain/assurer/assurer.contract';
 import { ReportsComponent } from './components/reports/reports.component';
+import { variables } from 'src/environments/environment';
 
 @NgModule({
   declarations: [
@@ -26,7 +27,9 @@ import { ReportsComponent } from './components/reports/reports.component';
     FormsModule
   ],
   providers: [
-    AssurerContract
+    AssurerContract,
+    { provide: 'HOLD_PERIOD', useValue: variables.holdPeriod },
+    { provide: 'FREEZE_PERIOD', useValue: variables.freezePeriod }
   ],
   bootstrap: [PopupComponent]
 })

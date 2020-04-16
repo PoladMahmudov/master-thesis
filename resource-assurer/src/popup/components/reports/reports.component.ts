@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { faLink, faPlus, faMinus, faHourglassEnd, faBroom, faCheck } from '@fortawesome/free-solid-svg-icons';
 import { getCurrentAccount } from 'src/lib/blockchain/configuration/account-storage';
@@ -24,8 +24,10 @@ export class ReportsComponent implements OnInit {
 
   constructor(
     private readonly route: ActivatedRoute,
-    private readonly contract: AssurerContract
-  ) { }
+    private readonly contract: AssurerContract,
+    @Inject('HOLD_PERIOD') private holdPeriod: number,
+    @Inject('FREEZE_PERIOD') private freezePeriod: number
+  ) {  }
 
   ngOnInit(): void {
     this.getCurrentAccount();
@@ -91,7 +93,7 @@ export class ReportsComponent implements OnInit {
 
   canExpire(createdOn: Date, reportOwner: string): boolean {
     // can be expired by owner after a week from creation
-    return new Date().getTime() - createdOn.getTime() > 7 * 24 * 3600 * 1000
+    return new Date().getTime() - createdOn.getTime() > this.holdPeriod
       && this._account === reportOwner;
   }
 
@@ -105,14 +107,14 @@ export class ReportsComponent implements OnInit {
   canClean(expiresOn: Date): boolean {
     // can be cleaned 3 days after expiration
     return this.expired(expiresOn)
-      && new Date().getTime() - expiresOn.getTime() > 3 * 24 * 3600 * 1000
+      && new Date().getTime() - expiresOn.getTime() > this.freezePeriod
   }
 
   cleanTime(expiresOn: Date): string {
     if (this.canClean(expiresOn)) {
       return '0h';
     }
-    return this.calcLeftTime(new Date(expiresOn.getTime() + 3 * 24 * 3600 * 1000));
+    return this.calcLeftTime(new Date(expiresOn.getTime() + this.freezePeriod));
   }
 
   private getResource(hash: string): void {

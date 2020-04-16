@@ -37,3 +37,19 @@ export const init = async () => {
     console.log('[DEV] CONFIG WAS SET.');
   }
 }
+
+export const variables = {
+  /** 
+   * Time period after report creation 
+   * until it can be expired
+   * NOTE: reduced to 10s for dev
+   */
+  holdPeriod: 10 * 1000,
+
+  /** 
+   * Time period after expiration
+   * until it can be cleaned
+   * NOTE: reduced to 10s for dev
+   */
+  freezePeriod: 10 * 1000
+};
