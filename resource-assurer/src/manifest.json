@@ -30,8 +30,7 @@
     "background": {
         "scripts": [
             "background.js",
-            "runtime.js",
-            "vendor.js"
+            "runtime.js"
         ],
         "persistent": true
     },

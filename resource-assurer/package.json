@@ -6,6 +6,7 @@
     "ng": "ng",
     "start": "ng build --watch --configuration=dev",
     "build": "ng build --configuration=production",
+    "staging": "ng build --configuration=staging",
     "lint": "ng lint"
   },
   "private": true,
